@@ -164,47 +164,28 @@
     return map[state] || map.warn;
   }
 
-  function renderAuthRecordFlags(data) {
-    const records = getAuthRecordStatuses(data);
-
-    return `
-      <div class="mt-5 pt-5 border-t border-black/5">
-        <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">DNS check for your domain</div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-          ${records.map((record) => {
-            const styles = recordStateStyles(record.state);
-            return `
-              <div class="rounded-2xl border ${styles.card} p-3.5 min-w-0">
-                <div class="flex items-center justify-between gap-2 mb-1.5">
-                  <span class="text-xs font-semibold tracking-wide text-slate-500">${escapeHtml(record.name)}</span>
-                  <span class="inline-flex items-center px-2 py-0.5 rounded-lg border text-[11px] font-semibold ${styles.chip}">${escapeHtml(record.label)}</span>
-                </div>
-                <p class="text-xs text-slate-600 leading-snug m-0">${escapeHtml(record.detail)}</p>
-              </div>`;
-          }).join('')}
-        </div>
-      </div>`;
+  function renderCompactRecordChips(data) {
+    return getAuthRecordStatuses(data).map((record) => {
+      const styles = recordStateStyles(record.state);
+      return `<span class="inline-flex items-center px-2 py-0.5 rounded-md border text-[11px] font-semibold ${styles.chip}" title="${escapeHtml(record.detail)}">${escapeHtml(record.name)}: ${escapeHtml(record.label)}</span>`;
+    }).join('');
   }
 
-  function renderDeliveryOutlookTile(data) {
+  function renderDeliveryOutlookCard(data) {
     const { domain, spoofRisk } = data;
     const exposure = normalizeExposure(spoofRisk.exposure || spoofRisk.risk || 'partial');
     const badge = deliveryBadge(exposure);
 
     return `
-      <div id="delivery-outlook" class="rounded-3xl border ${badge.bg} p-5 sm:p-6 md:p-8 mb-6 sm:mb-8 max-w-3xl mx-auto scroll-mt-[4.5rem] sm:scroll-mt-20">
-        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
-          <div class="min-w-0">
-            <div class="text-xs font-bold uppercase tracking-wider ${badge.labelColor}">What would actually happen</div>
-            <div class="text-sm text-slate-600 mt-1">Based on public DNS records for <span class="font-semibold text-slate-800">${escapeHtml(domain)}</span></div>
-          </div>
-          <span class="inline-flex items-center self-start px-3 py-1 rounded-full border text-xs font-semibold ${badge.labelColor} ${badge.bg} shrink-0">${escapeHtml(badge.label)}</span>
+      <div id="delivery-outlook" class="rounded-2xl border ${badge.bg} p-4">
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="text-xs font-bold uppercase tracking-wider ${badge.labelColor}">What would actually happen</div>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] font-semibold ${badge.labelColor} ${badge.bg} shrink-0">${escapeHtml(badge.label)}</span>
         </div>
-
-        <h2 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 leading-tight">${escapeHtml(spoofRisk.headline || 'This email could land in your employees\' inboxes.')}</h2>
-        <p class="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">${escapeHtml(spoofRisk.explanation || '')}</p>
-
-        ${renderAuthRecordFlags(data)}
+        <p class="text-sm font-semibold text-slate-900 leading-snug m-0">${escapeHtml(spoofRisk.headline || 'This email could land in your employees\' inboxes.')}</p>
+        <p class="text-xs text-slate-600 mt-1.5 leading-relaxed m-0">${escapeHtml(spoofRisk.explanation || '')}</p>
+        <div class="flex flex-wrap gap-1.5 mt-3">${renderCompactRecordChips(data)}</div>
+        <p class="text-[11px] text-slate-500 mt-2.5 m-0">DNS check for <span class="font-medium text-slate-700">${escapeHtml(domain)}</span></p>
       </div>`;
   }
 
@@ -284,11 +265,14 @@
       </div>`;
   }
 
-  function renderEducationalSidebar(domain, scenario, exposure, spoofRisk) {
+  function renderEducationalSidebar(data, scenario) {
+    const { domain } = data;
     const spoofFrom = buildSpoofAddress(domain, scenario);
 
     return `
       <div class="space-y-4">
+        ${renderDeliveryOutlookCard(data)}
+
         <div class="rounded-2xl border border-slate-200 bg-white p-5">
           <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-3">What recipients see</div>
           <ul class="space-y-3 text-sm text-slate-600">
@@ -408,9 +392,7 @@
     const scenario = getScenario(scenarioKey);
 
     return `
-      <div id="results-header">${renderDeliveryOutlookTile(data)}</div>
-
-      <div class="mb-5 sm:mb-6 text-center">
+      <div id="results-header" class="mb-5 sm:mb-6 text-center scroll-mt-[4.5rem] sm:scroll-mt-20">
         <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase">Spoof awareness preview</div>
         <div class="text-base sm:text-lg font-semibold text-slate-900 mt-0.5 break-words">What a fake email from ${escapeHtml(domain)} could look like</div>
       </div>
@@ -430,7 +412,7 @@
           <p class="text-xs text-slate-400 text-center mt-3">Simulated Outlook inbox, for illustration only</p>
         </div>
         <div id="educational-sidebar" class="lg:col-span-2">
-          ${renderEducationalSidebar(domain, scenario, exposure, spoofRisk)}
+          ${renderEducationalSidebar(data, scenario)}
         </div>
       </div>
 
@@ -458,7 +440,7 @@
 
     const sidebar = document.getElementById('educational-sidebar');
     if (sidebar) {
-      sidebar.innerHTML = renderEducationalSidebar(domain, scenario, exposure, spoofRisk);
+      sidebar.innerHTML = renderEducationalSidebar(data, scenario);
     }
 
     document.querySelectorAll('.scenario-tab').forEach((tab) => {
