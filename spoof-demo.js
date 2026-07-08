@@ -164,11 +164,23 @@
     return map[state] || map.warn;
   }
 
-  function renderCompactRecordChips(data) {
-    return getAuthRecordStatuses(data).map((record) => {
-      const styles = recordStateStyles(record.state);
-      return `<span class="inline-flex items-center px-2 py-0.5 rounded-md border text-[11px] font-semibold ${styles.chip}" title="${escapeHtml(record.detail)}">${escapeHtml(record.name)}: ${escapeHtml(record.label)}</span>`;
-    }).join('');
+  function renderCompactRecordTiles(data) {
+    const records = getAuthRecordStatuses(data);
+
+    return `
+      <div class="mt-3 pt-3 border-t border-black/5">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center mb-2.5">What we found</div>
+        <div class="flex justify-center gap-2">
+          ${records.map((record) => {
+            const styles = recordStateStyles(record.state);
+            return `
+              <div class="rounded-xl border ${styles.card} px-3 py-2.5 text-center min-w-[5.5rem] flex-1 max-w-[7.5rem]" title="${escapeHtml(record.detail)}">
+                <div class="text-[10px] font-semibold tracking-wide text-slate-500">${escapeHtml(record.name)}</div>
+                <div class="text-xs font-semibold ${styles.label} mt-0.5 leading-tight">${escapeHtml(record.label)}</div>
+              </div>`;
+          }).join('')}
+        </div>
+      </div>`;
   }
 
   function renderDeliveryOutlookTile(data) {
@@ -190,10 +202,7 @@
         <p class="text-base sm:text-lg font-semibold text-slate-900 leading-snug m-0">${escapeHtml(spoofRisk.headline || 'This email could land in your employees\' inboxes.')}</p>
         <p class="text-sm text-slate-600 mt-1.5 leading-snug m-0">${escapeHtml(spoofRisk.explanation || '')}</p>
 
-        <div class="flex flex-wrap items-center gap-1.5 mt-3 pt-3 border-t border-black/5">
-          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mr-0.5">DNS</span>
-          ${renderCompactRecordChips(data)}
-        </div>
+        ${renderCompactRecordTiles(data)}
       </div>`;
   }
 
