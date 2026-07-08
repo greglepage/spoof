@@ -80,7 +80,7 @@
     const level = normalizeExposure(exposure);
     const social = {
       invoice: 'Trusted CEO name, your real domain, PDF attached. Urgent invoices often get paid without a call.',
-      wire: 'CFO authority plus "in meetings" wording rushes wire transfers before anyone verifies.',
+      wire: 'It looks like your CFO and says they cannot take calls. Staff often approve wires before anyone verifies by phone.',
       it: 'IT lockout fear pushes people to click reset links before checking with real support.',
       customer: 'Customers trust mail from your domain. An urgent account notice feels official, so people click or reply before calling you.',
     };
