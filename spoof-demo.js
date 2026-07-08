@@ -437,10 +437,8 @@
   function updateBottomCta(domain) {
     const ctaDomain = document.getElementById('cta-domain');
     const ctaNote = document.getElementById('cta-domain-note');
-    const ctaBtnText = document.getElementById('cta-contact-btn-text');
     if (ctaDomain) ctaDomain.textContent = domain;
     if (ctaNote) ctaNote.classList.remove('hidden');
-    if (ctaBtnText) ctaBtnText.textContent = 'Get Help for Your Domain';
   }
 
   function refreshPreview(data, scenarioKey) {
