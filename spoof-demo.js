@@ -398,7 +398,7 @@
           <div class="service-card bg-white border border-teal-200 rounded-3xl px-5 py-6 sm:px-6 sm:py-7">
             <div class="step-number w-9 h-9 rounded-2xl flex items-center justify-center text-base mb-4">2</div>
             <h3 class="font-semibold text-lg mb-2">Creates urgency</h3>
-            <p class="text-[15px] text-slate-600 leading-relaxed">Fake invoices, wire transfers, and password resets all pressure people to act fast, before they call to verify. Switch scenarios above to see common attacks attackers use every day.</p>
+            <p class="text-[15px] text-slate-600 leading-relaxed">Fake invoices, wire transfers, password resets, and customer payment scams all pressure people to act fast, before they call to verify. Switch scenarios above to see common attacks attackers use every day.</p>
           </div>
 
           <div class="service-card bg-white border border-teal-200 rounded-3xl px-5 py-6 sm:px-6 sm:py-7">
@@ -414,7 +414,7 @@
     return Object.entries(SCENARIOS).map(([key, s]) => `
       <button
         type="button"
-        class="scenario-tab touch-target px-4 py-2.5 text-sm font-medium rounded-xl border transition-colors ${key === activeKey ? 'bg-white border-teal-300 text-slate-900 shadow-sm' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-white/60'}"
+        class="scenario-tab touch-target shrink-0 whitespace-nowrap px-4 py-2.5 text-sm font-medium rounded-xl border transition-colors ${key === activeKey ? 'bg-white border-teal-300 text-slate-900 shadow-sm' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-white/60'}"
         data-scenario="${escapeHtml(key)}"
       >${escapeHtml(s.label)}</button>`).join('');
   }
@@ -461,7 +461,7 @@
 
       <div class="mb-4 sm:mb-5 text-center">
         <p class="text-sm text-slate-600 mb-3">Choose a common scenario</p>
-        <div class="flex flex-wrap justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 p-1.5 max-w-lg mx-auto" role="tablist" aria-label="Spoof scenario">
+        <div class="flex flex-nowrap justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 p-1.5 w-full max-w-3xl mx-auto overflow-x-auto" role="tablist" aria-label="Spoof scenario">
           ${renderScenarioPicker(scenarioKey)}
         </div>
       </div>
