@@ -413,7 +413,6 @@
       <div id="results-header">${renderDeliveryOutlookTile(data)}</div>
 
       <div class="mb-4 sm:mb-5 text-center">
-        <div class="text-sm font-bold text-slate-900 mb-1.5">Simulated Outlook preview</div>
         <p class="text-sm text-slate-600 mb-3">Choose a <strong class="font-semibold text-slate-800">common scam scenario</strong> to see what employees might receive.</p>
         <div class="flex flex-wrap justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 p-1.5 max-w-lg mx-auto" role="tablist" aria-label="Spoof scenario">
           ${renderScenarioPicker(scenarioKey)}
