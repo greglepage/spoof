@@ -109,7 +109,7 @@
     const badge = deliveryBadge(exposure);
 
     return `
-      <div id="delivery-outlook" class="rounded-3xl border ${badge.bg} p-5 sm:p-6 md:p-8 mb-6 sm:mb-8 max-w-3xl mx-auto">
+      <div id="delivery-outlook" class="rounded-3xl border ${badge.bg} p-5 sm:p-6 md:p-8 mb-6 sm:mb-8 max-w-3xl mx-auto scroll-mt-[4.5rem] sm:scroll-mt-20">
         <div class="flex items-start gap-3 sm:gap-4">
           <div class="w-3 h-3 rounded-full ${badge.dot} mt-1.5 sm:mt-2 shrink-0 animate-pulse"></div>
           <div class="min-w-0">
@@ -321,14 +321,11 @@
     const scenario = getScenario(scenarioKey);
 
     return `
-      <div id="results-header" class="mb-5 sm:mb-6 text-center scroll-mt-[4.5rem] sm:scroll-mt-20">
-        <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase">Spoof awareness preview</div>
-      </div>
-
-      ${renderDeliveryOutlookTile(spoofRisk)}
+      <div id="results-header">${renderDeliveryOutlookTile(spoofRisk)}</div>
 
       <div class="mb-5 sm:mb-6 text-center">
-        <div class="text-base sm:text-lg font-semibold text-slate-900 break-words">What a fake email from ${escapeHtml(domain)} could look like</div>
+        <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase">Spoof awareness preview</div>
+        <div class="text-base sm:text-lg font-semibold text-slate-900 mt-0.5 break-words">What a fake email from ${escapeHtml(domain)} could look like</div>
       </div>
 
       <div class="mb-4 text-center">
