@@ -413,12 +413,8 @@
       <div id="results-header">${renderDeliveryOutlookTile(data)}</div>
 
       <div class="mb-4 sm:mb-5 text-center">
-        <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase">Spoof awareness preview</div>
-        <div class="text-base sm:text-lg font-semibold text-slate-900 mt-0.5 break-words">What a fake email from ${escapeHtml(domain)} could look like</div>
-      </div>
-
-      <div class="mb-4 text-center">
-        <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-2">Choose a scenario</div>
+        <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-2">Simulated Outlook preview</div>
+        <p class="text-sm text-slate-600 mb-3">Choose a common scam scenario to see what employees might receive.</p>
         <div class="flex flex-wrap justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 p-1.5 max-w-lg mx-auto" role="tablist" aria-label="Spoof scenario">
           ${renderScenarioPicker(scenarioKey)}
         </div>
