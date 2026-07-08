@@ -104,28 +104,19 @@
     return map[exposure] || map.partial;
   }
 
-  function renderDeliveryOutlookTile(domain, spoofRisk) {
+  function renderDeliveryOutlookTile(spoofRisk) {
     const exposure = normalizeExposure(spoofRisk.exposure || spoofRisk.risk || 'partial');
     const badge = deliveryBadge(exposure);
 
     return `
       <div id="delivery-outlook" class="rounded-3xl border ${badge.bg} p-5 sm:p-6 md:p-8 mb-6 sm:mb-8 max-w-3xl mx-auto scroll-mt-[4.5rem] sm:scroll-mt-20">
-        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 sm:gap-5">
-          <div class="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
-            <div class="w-3 h-3 rounded-full ${badge.dot} mt-1.5 sm:mt-2 shrink-0 animate-pulse"></div>
-            <div class="min-w-0">
-              <div class="text-xs font-bold uppercase tracking-wider ${badge.labelColor} mb-1">What would actually happen</div>
-              <h2 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 leading-tight">${escapeHtml(spoofRisk.headline || 'This email could land in your employees\' inboxes.')}</h2>
-              <p class="text-sm sm:text-base text-slate-600 mt-2 max-w-2xl leading-relaxed">${escapeHtml(spoofRisk.explanation || '')}</p>
-            </div>
+        <div class="flex items-start gap-3 sm:gap-4">
+          <div class="w-3 h-3 rounded-full ${badge.dot} mt-1.5 sm:mt-2 shrink-0 animate-pulse"></div>
+          <div class="min-w-0">
+            <div class="text-xs font-bold uppercase tracking-wider ${badge.labelColor} mb-1">What would actually happen</div>
+            <h2 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 leading-tight">${escapeHtml(spoofRisk.headline || 'This email could land in your employees\' inboxes.')}</h2>
+            <p class="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">${escapeHtml(spoofRisk.explanation || '')}</p>
           </div>
-          <a
-            href="https://dmarc.network26.com/?domain=${encodeURIComponent(domain)}"
-            class="touch-target inline-flex items-center justify-center gap-x-2 w-full md:w-auto px-5 py-3 sm:py-2.5 text-sm font-semibold rounded-xl bg-white/90 border border-slate-200/80 text-slate-800 hover:bg-white hover:border-teal-300 hover:text-teal-700 shadow-sm shrink-0 md:self-start md:mt-1"
-          >
-            View full DMARC report
-            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </a>
         </div>
       </div>`;
   }
@@ -242,10 +233,14 @@
         </div>
 
         <div class="rounded-2xl border border-teal-200 bg-teal-50/50 p-5">
-          <div class="text-xs font-semibold tracking-wider text-teal-700 uppercase mb-2">Recommended next step</div>
-          <p class="text-sm text-slate-600 leading-relaxed m-0">
-            Use the DMARC report above to see your DNS records, what is missing, and the exact steps to fix spoofing for <strong class="text-slate-800">${escapeHtml(domain)}</strong>.
+          <div class="text-xs font-semibold tracking-wider text-teal-700 uppercase mb-2">Want the technical details?</div>
+          <p class="text-sm text-slate-600 leading-relaxed m-0 mb-3">
+            Want the technical side? Our free DMARC checker shows your DNS records and recommended fix steps.
           </p>
+          <a href="https://dmarc.network26.com/?domain=${encodeURIComponent(domain)}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-700 hover:text-teal-800 underline underline-offset-2">
+            View full DMARC report for ${escapeHtml(domain)}
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
         </div>
       </div>`;
   }
@@ -326,7 +321,7 @@
     const scenario = getScenario(scenarioKey);
 
     return `
-      <div id="results-header">${renderDeliveryOutlookTile(domain, spoofRisk)}</div>
+      <div id="results-header">${renderDeliveryOutlookTile(spoofRisk)}</div>
 
       <div class="mb-5 sm:mb-6 text-center">
         <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase">Spoof awareness preview</div>
