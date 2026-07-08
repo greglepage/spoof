@@ -277,8 +277,8 @@
     const bodyHtml = scenario.body.map((p) => `<p class="m-0 mb-3">${escapeHtml(p)}</p>`).join('');
 
     return `
-      <div class="outlook-app relative rounded-2xl overflow-hidden border border-[#edebe9] shadow-xl bg-white text-[#323130]">
-        <div class="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 bg-[#0078d4] text-white">
+      <div class="outlook-app relative h-full min-h-[22rem] flex flex-col rounded-2xl overflow-hidden border border-[#edebe9] shadow-xl bg-white text-[#323130]">
+        <div class="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 bg-[#0078d4] text-white shrink-0">
           <div class="flex items-center gap-1.5 shrink-0">
             <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
             <span class="text-xs sm:text-sm font-semibold">Outlook</span>
@@ -286,16 +286,16 @@
           <div class="flex-1 text-center text-[10px] sm:text-xs text-white/80 truncate">Inbox</div>
         </div>
 
-        <div class="flex flex-col bg-white">
-          <div class="flex items-center gap-1 px-3 py-1.5 border-b border-[#edebe9] text-[#605e5c]">
+        <div class="flex flex-1 flex-col min-h-0 bg-white">
+          <div class="flex items-center gap-1 px-3 py-1.5 border-b border-[#edebe9] text-[#605e5c] shrink-0">
             <span class="text-[10px] px-2 py-1 rounded shrink-0">Reply</span>
             <span class="text-[10px] px-2 py-1 rounded shrink-0">Forward</span>
           </div>
 
           ${blockedBanner}
 
-          <div class="p-4 sm:p-6">
-            <h2 class="text-base sm:text-xl font-semibold text-[#323130] mb-4 leading-snug">${escapeHtml(scenario.subject)}</h2>
+          <div class="p-4 sm:p-6 flex-1 flex flex-col min-h-0">
+            <h2 class="text-base sm:text-xl font-semibold text-[#323130] mb-4 leading-snug shrink-0">${escapeHtml(scenario.subject)}</h2>
             <div class="flex items-start gap-3 mb-5 pb-4 border-b border-[#edebe9]">
               <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#0078d4] text-white flex items-center justify-center text-sm font-semibold shrink-0">${escapeHtml(initials)}</div>
               <div class="min-w-0 flex-1">
@@ -307,7 +307,7 @@
                 <div class="text-[10px] text-[#a19f9d] mt-0.5">${escapeHtml(timeFull)}</div>
               </div>
             </div>
-            <div class="text-sm sm:text-[15px] text-[#323130] leading-relaxed">
+            <div class="text-sm sm:text-[15px] text-[#323130] leading-relaxed flex-1">
               ${bodyHtml}
               <p class="m-0">Thanks,<br>${escapeHtml(scenario.displayName)}</p>
               ${linkHtml}
@@ -316,7 +316,7 @@
           </div>
         </div>
 
-        <div class="px-4 py-2 bg-[#faf9f8] border-t border-[#edebe9] text-[10px] text-[#605e5c] text-center">
+        <div class="px-4 py-2 bg-[#faf9f8] border-t border-[#edebe9] text-[10px] text-[#605e5c] text-center shrink-0 mt-auto">
           ${customerView
             ? 'Simulated Outlook message. What one of your customers might see in their inbox.'
             : 'Simulated Outlook message. What an employee might see in their inbox.'}
@@ -466,14 +466,14 @@
         </div>
       </div>
 
-      <div class="grid lg:grid-cols-5 gap-6 sm:gap-8 mb-8 sm:mb-10">
-        <div class="lg:col-span-3 min-w-0">
-          <div id="preview-container" class="relative">
+      <div class="grid lg:grid-cols-5 lg:items-stretch gap-6 sm:gap-8 mb-8 sm:mb-10">
+        <div class="lg:col-span-3 min-w-0 flex flex-col">
+          <div id="preview-container" class="relative flex-1 flex flex-col min-h-0">
             ${renderOutlookPreview(domain, scenario, exposure)}
           </div>
-          <p class="text-xs text-slate-400 text-center mt-3">Simulated Outlook inbox, for illustration only</p>
+          <p class="text-xs text-slate-400 text-center mt-3 lg:hidden">Simulated Outlook inbox, for illustration only</p>
         </div>
-        <div id="educational-sidebar" class="lg:col-span-2">
+        <div id="educational-sidebar" class="lg:col-span-2 min-w-0">
           ${renderEducationalSidebar(data, scenario, scenarioKey)}
         </div>
       </div>
