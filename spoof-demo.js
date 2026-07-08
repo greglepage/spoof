@@ -170,13 +170,16 @@
     return `
       <div class="mt-3 pt-3 border-t border-black/5">
         <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center mb-2.5">What we found</div>
-        <div class="flex justify-center gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 max-w-2xl mx-auto">
           ${records.map((record) => {
             const styles = recordStateStyles(record.state);
             return `
-              <div class="rounded-xl border ${styles.card} px-3 py-2.5 text-center min-w-[5.5rem] flex-1 max-w-[7.5rem]" title="${escapeHtml(record.detail)}">
-                <div class="text-[10px] font-semibold tracking-wide text-slate-500">${escapeHtml(record.name)}</div>
-                <div class="text-xs font-semibold ${styles.label} mt-0.5 leading-tight">${escapeHtml(record.label)}</div>
+              <div class="rounded-xl border ${styles.card} p-3 min-w-0">
+                <div class="flex items-center justify-between gap-2 mb-1">
+                  <span class="text-xs font-semibold tracking-wide text-slate-500">${escapeHtml(record.name)}</span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-lg border text-[11px] font-semibold ${styles.chip}">${escapeHtml(record.label)}</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-snug m-0">${escapeHtml(record.detail)}</p>
               </div>`;
           }).join('')}
         </div>
