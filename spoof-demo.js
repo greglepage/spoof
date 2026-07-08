@@ -64,23 +64,20 @@
   function getScenarioWhyItWorks(scenarioKey, exposure) {
     const level = normalizeExposure(exposure);
     const social = {
-      invoice:
-        'A fake invoice from the CEO looks like routine business. The display name is familiar, the address uses your real domain, and the PDF attachment makes it feel legitimate. Finance and managers often process invoices without calling to confirm — especially when the message says it is urgent.',
-      wire:
-        'A wire request from the CFO carries real authority. The confidential tone and "I am in meetings" line are meant to stop anyone from verifying by phone. One rushed transfer before someone double-checks can move serious money.',
-      it:
-        'A password-expiring notice from IT triggers immediate fear of being locked out. The reset link looks like an internal tool, and most people click first and ask questions later — which is exactly what credential thieves count on.',
+      invoice: 'Trusted CEO name, your real domain, PDF attached — urgent invoices often get paid without a call.',
+      wire: 'CFO authority plus "in meetings" wording rushes wire transfers before anyone verifies.',
+      it: 'IT lockout fear pushes people to click reset links before checking with real support.',
     };
     const technical = {
-      exposed:
-        'Your DNS records do not tell inbox providers to block mail like this, so it can arrive looking exactly like the preview.',
-      partial:
-        'Your email protection has gaps, so some inbox providers may still deliver a message like this. It only takes one person acting on it.',
-      protected:
-        'Your DNS records should block mail like this today. This preview still shows what attackers try — and why keeping DMARC, SPF, and DKIM solid matters.',
+      exposed: 'Your DNS does not block this — it can reach inboxes looking like the preview.',
+      partial: 'Partial DNS protection — some providers may still deliver it.',
+      protected: 'Your DNS should block this; attackers still send messages like it anyway.',
     };
 
-    return `${social[scenarioKey] || social.invoice} ${technical[level] || technical.partial}`;
+    return {
+      social: social[scenarioKey] || social.invoice,
+      technical: technical[level] || technical.partial,
+    };
   }
 
   function buildSpoofAddress(domain, scenario) {
@@ -308,7 +305,7 @@
     const { domain, spoofRisk } = data;
     const spoofFrom = buildSpoofAddress(domain, scenario);
     const exposure = spoofRisk?.exposure || spoofRisk?.risk || 'partial';
-    const whyItWorks = getScenarioWhyItWorks(scenarioKey, exposure);
+    const { social: whySocial, technical: whyTechnical } = getScenarioWhyItWorks(scenarioKey, exposure);
 
     return `
       <div class="space-y-4">
@@ -332,7 +329,8 @@
 
         <div class="rounded-2xl border border-amber-200 bg-amber-50/60 p-5">
           <div class="text-xs font-semibold tracking-wider text-amber-700 uppercase mb-2">Why this scenario works</div>
-          <p class="text-sm text-amber-900 leading-relaxed m-0">${escapeHtml(whyItWorks)}</p>
+          <p class="text-sm text-amber-900 leading-snug m-0">${escapeHtml(whySocial)}</p>
+          <p class="text-sm text-amber-800/90 leading-snug m-0 mt-2">${escapeHtml(whyTechnical)}</p>
         </div>
 
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
