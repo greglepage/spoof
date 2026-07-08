@@ -41,5 +41,6 @@ Optional: `ALLOWED_ORIGINS` for CORS restriction.
 | `index.html` | Landing page and Outlook preview UI |
 | `spoof-demo.js` | Client-side demo flow |
 | `checker-core.js` | DNS/SPF/DKIM/DMARC checks |
-| `worker/src/index.js` | Demo email API |
+| `functions/_lib/api-worker.js` | Demo email API (shared handler) |
 | `functions/api/[[path]].js` | Pages Function adapter |
+| `worker/src/index.js` | Standalone worker entry (re-exports shared handler) |
