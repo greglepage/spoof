@@ -323,10 +323,13 @@
     return `
       <div id="results-header" class="mb-5 sm:mb-6 text-center scroll-mt-[4.5rem] sm:scroll-mt-20">
         <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase">Spoof awareness preview</div>
-        <div class="text-base sm:text-lg font-semibold text-slate-900 mt-0.5 break-words">What a fake email from ${escapeHtml(domain)} could look like</div>
       </div>
 
       ${renderDeliveryOutlookTile(spoofRisk)}
+
+      <div class="mb-5 sm:mb-6 text-center">
+        <div class="text-base sm:text-lg font-semibold text-slate-900 break-words">What a fake email from ${escapeHtml(domain)} could look like</div>
+      </div>
 
       <div class="mb-4 text-center">
         <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-2">Choose a scenario</div>
