@@ -68,6 +68,59 @@
     return `${scenario.localPart}@${domain}`;
   }
 
+  function normalizeExposure(exposureOrRisk) {
+    const map = {
+      exposed: 'exposed',
+      partial: 'partial',
+      protected: 'protected',
+      high: 'exposed',
+      medium: 'partial',
+      low: 'protected',
+    };
+    return map[exposureOrRisk] || 'partial';
+  }
+
+  function deliveryBadge(exposure) {
+    const map = {
+      exposed: {
+        bg: 'bg-red-50 border-red-200',
+        dot: 'bg-red-500',
+        label: 'Likely to deliver',
+        labelColor: 'text-red-700',
+      },
+      partial: {
+        bg: 'bg-amber-50 border-amber-200',
+        dot: 'bg-amber-500',
+        label: 'May deliver',
+        labelColor: 'text-amber-700',
+      },
+      protected: {
+        bg: 'bg-teal-50 border-teal-200',
+        dot: 'bg-teal-500',
+        label: 'Likely blocked',
+        labelColor: 'text-teal-700',
+      },
+    };
+    return map[exposure] || map.partial;
+  }
+
+  function renderDeliveryOutlookTile(spoofRisk) {
+    const exposure = normalizeExposure(spoofRisk.exposure || spoofRisk.risk || 'partial');
+    const badge = deliveryBadge(exposure);
+
+    return `
+      <div id="delivery-outlook" class="rounded-3xl border ${badge.bg} p-5 sm:p-6 md:p-8 mb-6 sm:mb-8 max-w-3xl mx-auto">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <div class="w-3 h-3 rounded-full ${badge.dot} mt-1.5 sm:mt-2 shrink-0 animate-pulse"></div>
+          <div class="min-w-0">
+            <div class="text-xs font-bold uppercase tracking-wider ${badge.labelColor} mb-1">What would actually happen</div>
+            <h2 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 leading-tight">${escapeHtml(spoofRisk.headline || 'This email could land in your employees\' inboxes.')}</h2>
+            <p class="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">${escapeHtml(spoofRisk.explanation || '')}</p>
+          </div>
+        </div>
+      </div>`;
+  }
+
   function renderOutlookPreview(domain, scenario, exposure) {
     const spoofFrom = buildSpoofAddress(domain, scenario);
     const initials = scenario.displayName.slice(0, 1).toUpperCase();
@@ -146,11 +199,6 @@
 
   function renderEducationalSidebar(domain, scenario, exposure, spoofRisk) {
     const spoofFrom = buildSpoofAddress(domain, scenario);
-    const exposureNote = {
-      exposed: 'Without email authentication in place, messages like this can land in employee inboxes with no warning banner.',
-      partial: 'Some inbox providers may flag or block this, but others could still deliver it. Attackers only need one person to click.',
-      protected: 'Your domain has protection that should stop this from reaching inboxes. The preview shows what attackers still try to send.',
-    }[exposure] || '';
 
     return `
       <div class="space-y-4">
@@ -178,10 +226,9 @@
         </div>
 
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-          <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-2">What actually happened</div>
+          <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-2">How spoofing works</div>
           <p class="text-sm text-slate-600 leading-relaxed m-0">
-            No one hacked your email server. An attacker simply put your domain in the <strong class="text-slate-800">From</strong> field from their own server.
-            ${escapeHtml(exposureNote)}
+            No one hacked your email server. An attacker simply puts your domain in the <strong class="text-slate-800">From</strong> field from their own server and hopes someone acts before verifying.
           </p>
         </div>
 
@@ -278,6 +325,8 @@
         <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase">Spoof awareness preview</div>
         <div class="text-base sm:text-lg font-semibold text-slate-900 mt-0.5 break-words">What a fake email from ${escapeHtml(domain)} could look like</div>
       </div>
+
+      ${renderDeliveryOutlookTile(spoofRisk)}
 
       <div class="mb-4 text-center">
         <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-2">Choose a scenario</div>
