@@ -64,13 +64,13 @@
   function getScenarioWhyItWorks(scenarioKey, exposure) {
     const level = normalizeExposure(exposure);
     const social = {
-      invoice: 'Trusted CEO name, your real domain, PDF attached — urgent invoices often get paid without a call.',
+      invoice: 'Trusted CEO name, your real domain, PDF attached. Urgent invoices often get paid without a call.',
       wire: 'CFO authority plus "in meetings" wording rushes wire transfers before anyone verifies.',
       it: 'IT lockout fear pushes people to click reset links before checking with real support.',
     };
     const technical = {
-      exposed: 'Your DNS does not block this — it can reach inboxes looking like the preview.',
-      partial: 'Partial DNS protection — some providers may still deliver it.',
+      exposed: 'Your DNS does not block this, so it can reach inboxes looking like the preview.',
+      partial: 'Partial DNS protection. Some providers may still deliver it.',
       protected: 'Your DNS should block this; attackers still send messages like it anyway.',
     };
 
