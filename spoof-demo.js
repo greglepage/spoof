@@ -13,8 +13,7 @@
       preview: 'Hi team, please process the attached invoice today. Let me know once complete. Thanks.',
       body: [
         'Hi,',
-        'Please review and process the attached invoice at your earliest convenience. This needs to go out today.',
-        'Let me know once it\'s done.',
+        'Please process the attached invoice today.',
       ],
       attachment: (domain) => `Invoice_${domain}_Q1.pdf`,
       attachmentSize: '248 KB',
@@ -27,8 +26,7 @@
       preview: 'Need you to handle a time-sensitive wire today. Details in the attached PDF. Do not call, I\'m in meetings.',
       body: [
         'Hi,',
-        'I need you to process an urgent wire transfer today. Full instructions are in the attached document.',
-        'This is time-sensitive. Please handle before end of day. I\'m in meetings and can\'t take calls.',
+        'Please handle the urgent wire in the attached PDF before end of day. I\'m in meetings and can\'t take calls.',
       ],
       attachment: (domain) => `Wire_Instructions_${domain}.pdf`,
       attachmentSize: '186 KB',
@@ -41,8 +39,7 @@
       preview: 'Your company password expires in 2 hours. Use the link below to reset it now or you\'ll be locked out.',
       body: [
         'Hi,',
-        'Your password for company systems expires today. Reset it now to avoid being locked out of email and shared drives.',
-        'This is an automated notice from IT. If you\'ve already reset your password, you can ignore this message.',
+        'Your password expires today. Reset it now using the link below to avoid being locked out.',
       ],
       attachment: null,
       fakeLink: 'https://secure-login.example.com/reset',
@@ -56,8 +53,7 @@
       preview: 'We need you to confirm your account details to keep your service active. Please use the link below today.',
       body: [
         'Dear valued customer,',
-        'We are reviewing account records and need you to confirm your contact details to avoid a service interruption.',
-        'Please use the secure link below to verify your information. It only takes a minute.',
+        'Please confirm your account details using the link below to avoid a service interruption.',
       ],
       attachment: null,
       fakeLink: 'https://account.example.com/verify',
@@ -76,23 +72,70 @@
     return SCENARIOS[key] || SCENARIOS.invoice;
   }
 
-  function getScenarioWhyItWorks(scenarioKey, exposure) {
+  function getTechnicalWhy(data, exposure) {
     const level = normalizeExposure(exposure);
+    const issues = data.status?.issues || [];
+    const policy = data.dmarc?.tags?.p?.toLowerCase() || null;
+    const dkimFound = data.dkimResults?.some((d) => d.found);
+
+    if (level === 'exposed') {
+      if (issues.includes('no-dmarc') && issues.includes('no-spf')) {
+        return 'Your domain has no DMARC or SPF records, so inbox providers are not told to block mail from unauthorized servers.';
+      }
+      if (issues.includes('no-dmarc')) {
+        return 'Without a DMARC policy, providers have no instruction to block spoofed mail that fails authentication.';
+      }
+      if (issues.includes('dmarc-none')) {
+        return 'Your DMARC policy is monitor-only (p=none), so providers log failures but do not block messages like this.';
+      }
+      if (issues.includes('no-spf')) {
+        return 'Without SPF, providers cannot verify which servers are allowed to send for your domain.';
+      }
+      if (issues.includes('spf-allow-all')) {
+        return 'Your SPF record allows any server to pass (+all), so spoofed mail can look legitimate to many providers.';
+      }
+      return 'Your DNS does not tell inbox providers to block unauthorized senders, so messages like this can reach inboxes.';
+    }
+
+    if (level === 'partial') {
+      const reasons = [];
+      if (issues.includes('spf-softfail')) {
+        reasons.push('your SPF uses ~all, which can let unverified senders through');
+      }
+      if (!dkimFound) {
+        reasons.push('no DKIM signing keys were found for your domain');
+      }
+      if (!reasons.length && policy !== 'quarantine' && policy !== 'reject') {
+        reasons.push('your DMARC policy does not require providers to block or quarantine failures');
+      }
+
+      if (reasons.length === 1) {
+        return `Because ${reasons[0]}, some inbox providers may still deliver messages like this.`;
+      }
+      if (reasons.length === 2) {
+        return `Because ${reasons[0]} and ${reasons[1]}, some inbox providers may still deliver messages like this.`;
+      }
+      return 'Your DNS gives providers mixed signals about spoofed mail, so some may still deliver messages like this.';
+    }
+
+    if (policy === 'reject') {
+      return 'Your DMARC reject policy tells major providers to block spoofed mail, though attackers still send messages like this.';
+    }
+    return 'Your DMARC quarantine policy tells major providers to junk spoofed mail, though attackers still send messages like this.';
+  }
+
+  function getScenarioWhyItWorks(scenarioKey, data) {
+    const exposure = data.spoofRisk?.exposure || data.spoofRisk?.risk || 'partial';
     const social = {
       invoice: 'Trusted CEO name, your real domain, PDF attached. Urgent invoices often get paid without a call.',
       wire: 'It looks like your CFO and says they cannot take calls. Staff often approve wires before anyone verifies by phone.',
       it: 'IT lockout fear pushes people to click reset links before checking with real support.',
       customer: 'Customers trust mail from your domain. An urgent account notice feels official, so people click or reply before calling you.',
     };
-    const technical = {
-      exposed: 'Your DNS does not block this, so it can reach inboxes looking like the preview.',
-      partial: 'Partial DNS protection. Some providers may still deliver it.',
-      protected: 'Your DNS should block this; attackers still send messages like it anyway.',
-    };
 
     return {
       social: social[scenarioKey] || social.invoice,
-      technical: technical[level] || technical.partial,
+      technical: getTechnicalWhy(data, exposure),
     };
   }
 
@@ -277,7 +320,7 @@
     const bodyHtml = scenario.body.map((p) => `<p class="m-0 mb-3">${escapeHtml(p)}</p>`).join('');
 
     return `
-      <div class="outlook-app relative h-full min-h-[22rem] flex flex-col rounded-2xl overflow-hidden border border-[#edebe9] shadow-xl bg-white text-[#323130]">
+      <div class="outlook-app relative h-full flex flex-col rounded-2xl overflow-hidden border border-[#edebe9] shadow-xl bg-white text-[#323130]">
         <div class="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 bg-[#0078d4] text-white shrink-0">
           <div class="flex items-center gap-1.5 shrink-0">
             <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
@@ -307,7 +350,7 @@
                 <div class="text-[10px] text-[#a19f9d] mt-0.5">${escapeHtml(timeFull)}</div>
               </div>
             </div>
-            <div class="text-sm sm:text-[15px] text-[#323130] leading-relaxed flex-1">
+            <div class="text-sm sm:text-[15px] text-[#323130] leading-relaxed">
               ${bodyHtml}
               <p class="m-0">Thanks,<br>${escapeHtml(scenario.displayName)}</p>
               ${linkHtml}
@@ -316,7 +359,7 @@
           </div>
         </div>
 
-        <div class="px-4 py-2 bg-[#faf9f8] border-t border-[#edebe9] text-[10px] text-[#605e5c] text-center shrink-0 mt-auto">
+        <div class="px-4 py-2 bg-[#faf9f8] border-t border-[#edebe9] text-[10px] text-[#605e5c] text-center shrink-0">
           ${customerView
             ? 'Simulated Outlook message. What one of your customers might see in their inbox.'
             : 'Simulated Outlook message. What an employee might see in their inbox.'}
@@ -328,7 +371,7 @@
     const { domain, spoofRisk } = data;
     const spoofFrom = buildSpoofAddress(domain, scenario);
     const exposure = spoofRisk?.exposure || spoofRisk?.risk || 'partial';
-    const { social: whySocial, technical: whyTechnical } = getScenarioWhyItWorks(scenarioKey, exposure);
+    const { social: whySocial, technical: whyTechnical } = getScenarioWhyItWorks(scenarioKey, data);
     const customerView = isCustomerScenario(scenario);
     const recipientBullets = customerView
       ? [
@@ -359,13 +402,6 @@
           <div class="text-xs font-semibold tracking-wider text-amber-700 uppercase mb-2">Why this scenario works</div>
           <p class="text-sm text-amber-900 leading-snug m-0">${escapeHtml(whySocial)}</p>
           <p class="text-sm text-amber-800/90 leading-snug m-0 mt-2">${escapeHtml(whyTechnical)}</p>
-        </div>
-
-        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-          <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-2">How spoofing works</div>
-          <p class="text-sm text-slate-600 leading-relaxed m-0">
-            No one hacked your email server. An attacker simply puts your domain in the <strong class="text-slate-800">From</strong> field from their own server and hopes someone acts before verifying.
-          </p>
         </div>
 
         <div class="rounded-2xl border border-teal-200 bg-teal-50/50 p-5">
