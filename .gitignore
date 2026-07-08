@@ -1,7 +1,26 @@
+# Dependencies / Cloudflare
 node_modules/
 .wrangler/
 .dev.vars
-*.log
-.DS_Store
+
+# Cursor / local dev (not part of the site)
 mcps/
 terminals/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Env / secrets
+.env
+.env.*
+
+# Logs
+*.log

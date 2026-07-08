@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PLB79561LT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PLB79561LT');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>What Would a Spoofed Email Look Like? | Network26</title>
+  <meta name="description" content="Free spoof awareness preview. See a realistic Microsoft Outlook example of what a fake email from your domain could look like in an employee's inbox. Educational, no signup.">
+
+  <meta property="og:title" content="What Would a Spoofed Email Look Like? | Network26">
+  <meta property="og:description" content="Visual spoof email preview for your domain. Network26 is managed IT for Washington State SMBs. See what employees could receive in Outlook, then talk to us about email security and ongoing support.">
+  <meta property="og:image" content="logo-icon.jpg">
+  <meta property="og:type" content="website">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/jpeg" href="logo-icon.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Orbitron:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #0f172a;
+      --teal: #14b8a6;
+    }
+
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: clip;
+    }
+    @supports not (overflow: clip) {
+      body { overflow-x: hidden; }
+    }
+
+    .section-header {
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+    }
+
+    .logo-font {
+      font-family: 'Orbitron', 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .nav-link {
+      transition: color 0.1s ease;
+    }
+    .nav-link:hover {
+      color: #14b8a6;
+    }
+    .nav-link.nav-link-active {
+      color: #0d9488;
+    }
+    .nav-link.nav-link-active:hover {
+      color: #0d9488;
+    }
+    .mobile-link.nav-link-active {
+      color: #0d9488;
+      background-color: #f0fdfa;
+      font-weight: 500;
+    }
+
+    .hero-bg {
+      background: linear-gradient(135deg, #0f172a 0%, #1e2937 100%);
+    }
+
+    .network-pattern {
+      background-image:
+        radial-gradient(circle at 25% 30%, rgba(20, 184, 166, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 75% 70%, rgba(14, 165, 233, 0.06) 0%, transparent 60%);
+      background-size: 120px 120px;
+    }
+
+    .service-card {
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .service-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+      }
+    }
+
+    .teal-btn {
+      background-color: #14b8a6;
+      color: white;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .teal-btn:hover:not(:disabled) {
+        background-color: #0f766e;
+        transform: translateY(-1px);
+      }
+    }
+    .teal-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .touch-target { min-height: 44px; }
+
+    .step-number {
+      background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+      color: white;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-size: 2.25rem;
+      line-height: 2.5rem;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-title {
+      font-size: 1.75rem;
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+    }
+
+    @media (min-width: 640px) {
+      .hero-title { font-size: 2.25rem; line-height: 2.5rem; }
+    }
+
+    @media (max-width: 640px) {
+      .section-title { font-size: 1.625rem; line-height: 2rem; }
+    }
+
+    .checker-input {
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-size: 16px;
+    }
+    .checker-input:focus {
+      border-color: #14b8a6;
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { animation: spin 0.7s linear infinite; }
+
+    .loading-step { transition: all 0.25s ease; }
+    .loading-step.is-active .loading-step-dot {
+      background-color: #14b8a6;
+      box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.2);
+    }
+    .loading-step.is-done .loading-step-dot { background-color: #14b8a6; }
+    .loading-step.is-pending .loading-step-dot { background-color: #cbd5e1; }
+
+    .page-x {
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
+    @media (min-width: 640px) {
+      .page-x {
+        padding-left: max(1.5rem, env(safe-area-inset-left));
+        padding-right: max(1.5rem, env(safe-area-inset-right));
+      }
+    }
+
+    .outlook-app { font-family: 'Segoe UI', 'Inter', system-ui, sans-serif; }
+
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+  <!-- NAVBAR -->
+  <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto page-x">
+      <div class="flex items-center justify-between h-14 sm:h-16">
+        <div class="flex items-center gap-x-2 sm:gap-x-3 min-w-0">
+          <a href="https://network26.com/" class="flex items-center gap-x-2 sm:gap-x-3 group min-w-0">
+            <img src="logo-icon.jpg" alt="Network26 logo icon" class="h-8 w-8 sm:h-9 sm:w-9 rounded-xl object-cover ring-1 ring-slate-200 group-hover:ring-teal-200 transition-all shrink-0">
+            <div class="min-w-0">
+              <div class="logo-font text-xl sm:text-2xl truncate"><span class="text-slate-900">Network</span><span class="text-teal-500 group-hover:text-teal-400 transition-colors">26</span></div>
+            </div>
+          </a>
+        </div>
+
+        <div class="hidden md:flex items-center gap-x-8 text-sm font-medium">
+          <a href="https://network26.com/" class="nav-link text-slate-600 hover:text-slate-900">Home</a>
+          <a href="https://network26.com/#services" class="nav-link text-slate-600 hover:text-slate-900">Services</a>
+          <a href="https://network26.com/#why-us" class="nav-link text-slate-600 hover:text-slate-900">Why Us</a>
+          <a href="https://network26.com/#how" class="nav-link text-slate-600 hover:text-slate-900">How it Works</a>
+          <a href="https://network26.com/#contact" class="nav-link text-slate-600 hover:text-slate-900">Contact</a>
+          <a href="https://network26.com/about.html" class="nav-link text-slate-600 hover:text-slate-900">About</a>
+          <a href="https://support.network26.com" class="nav-link text-slate-600 hover:text-slate-900">Support Portal</a>
+        </div>
+
+        <div class="hidden md:flex items-center gap-x-4">
+          <a href="tel:4253689526"
+             class="inline-flex items-center gap-x-2 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-[1.05rem] h-[1.05rem] shrink-0 translate-y-[0.5px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            <span>425-368-9526</span>
+          </a>
+          <a href="https://network26.com/#contact"
+             class="px-5 py-2 text-sm font-semibold rounded-xl teal-btn shadow-sm">
+            Get a Quote
+          </a>
+        </div>
+
+        <button id="mobile-menu-btn"
+                class="md:hidden touch-target inline-flex items-center justify-center p-2.5 -mr-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
+                aria-label="Toggle menu"
+                aria-expanded="false">
+          <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden border-t bg-white page-x py-4 max-h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain">
+      <div class="flex flex-col gap-y-1 text-sm font-medium">
+        <a href="https://network26.com/" class="mobile-link touch-target flex items-center px-3 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Home</a>
+        <a href="https://network26.com/#services" class="mobile-link touch-target flex items-center px-3 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Services</a>
+        <a href="https://network26.com/#why-us" class="mobile-link touch-target flex items-center px-3 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Why Us</a>
+        <a href="https://network26.com/#how" class="mobile-link touch-target flex items-center px-3 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">How it Works</a>
+        <a href="https://network26.com/#contact" class="mobile-link touch-target flex items-center px-3 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Contact</a>
+        <a href="https://network26.com/about.html" class="mobile-link touch-target flex items-center px-3 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">About</a>
+        <a href="https://support.network26.com" class="mobile-link touch-target flex items-center px-3 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Support Portal</a>
+
+        <div class="pt-3 mt-2 border-t flex flex-col gap-y-3">
+          <a href="tel:4253689526" class="teal-btn touch-target flex items-center justify-center gap-x-2 text-base font-semibold py-3 rounded-2xl text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            <span class="leading-none">Call 425-368-9526</span>
+          </a>
+          <a href="https://network26.com/#contact" class="teal-btn text-center px-6 py-3 rounded-2xl text-sm font-semibold">Get a Quote</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero-bg text-white pt-10 pb-12 sm:pt-14 sm:pb-16 relative overflow-hidden">
+    <div class="network-pattern absolute inset-0"></div>
+
+    <div class="max-w-3xl mx-auto page-x relative text-center">
+      <div class="inline-flex items-center bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl px-4 sm:px-5 py-1.5 mb-5 sm:mb-6">
+        <span class="text-sm sm:text-[15px] font-medium tracking-wide text-teal-300">Free simulation &bull; No signup required</span>
+      </div>
+
+      <h1 class="hero-title text-white font-semibold mb-4 sm:mb-5">
+        What would a spoofed email<br><span class="text-teal-400">from your domain look like?</span>
+      </h1>
+
+      <p class="max-w-xl mx-auto text-base sm:text-lg text-slate-300 mb-6 sm:mb-8 leading-relaxed">
+        Enter your domain to see a realistic Microsoft Outlook preview: the kind of message sitting in your employees' inboxes if email authentication isn't in place.
+      </p>
+
+      <form id="checker-form" class="max-w-xl mx-auto">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input
+            type="text"
+            id="domain-input"
+            name="domain"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            inputmode="url"
+            placeholder="yourcompany.com"
+            class="checker-input touch-target flex-1 rounded-2xl px-4 sm:px-5 py-3.5 text-slate-900 outline-none border-2 border-transparent bg-white min-w-0"
+            aria-label="Domain name"
+          >
+          <button type="submit" id="check-btn" class="touch-target inline-flex items-center justify-center gap-x-2 w-full sm:w-auto px-7 py-3.5 text-base font-semibold rounded-2xl teal-btn shadow-lg shadow-teal-950/30 shrink-0">
+            <svg id="check-spinner" class="hidden spinner w-5 h-5" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+            <span id="check-btn-text">Show Spoof Preview</span>
+          </button>
+        </div>
+        <p id="checker-error" class="hidden mt-3 text-sm text-red-300 bg-red-950/30 border border-red-400/30 rounded-xl px-4 py-2"></p>
+      </form>
+
+      <p class="mt-5 text-sm text-slate-400">
+        We only look up public DNS records. Brought here by our email?
+      </p>
+
+      <div class="mt-5 sm:mt-6 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 gap-y-2 text-sm text-slate-400">
+        <span>Try:</span>
+        <a href="#" data-example-domain="contoso.com" class="touch-target inline-flex items-center py-1 text-teal-400 hover:text-teal-300 underline underline-offset-2">contoso.com</a>
+        <a href="https://dmarc.network26.com" class="touch-target inline-flex items-center py-1 text-teal-400 hover:text-teal-300 underline underline-offset-2">DMARC checker →</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- TRUST BAR -->
+  <div class="border-b bg-white">
+    <div class="max-w-6xl mx-auto page-x py-4 sm:py-5">
+      <div class="flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-y-2 sm:gap-y-3 gap-x-6 text-sm text-slate-500 font-medium text-center">
+        <span class="font-semibold text-slate-700">Microsoft Outlook preview</span>
+        <span class="text-slate-300 select-none" aria-hidden="true">·</span>
+        <span class="font-semibold text-slate-700">Real attack scenarios</span>
+        <span class="text-slate-300 select-none" aria-hidden="true">·</span>
+        <span class="text-teal-600 font-semibold">Managed IT for Washington State SMBs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <section class="max-w-5xl mx-auto page-x py-10 sm:py-14">
+    <div class="text-center mb-8 sm:mb-10">
+      <div class="text-teal-600 text-xs tracking-[2px] font-semibold mb-1.5">HOW SPOOFING WORKS</div>
+      <p class="mt-3 text-slate-600 leading-relaxed max-w-xl mx-auto">
+        Spoofed email doesn't require hacking your servers. An attacker puts your domain in the From field and hopes someone acts fast. Enter your domain above to see a realistic Outlook example built for your business.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+      <div class="service-card bg-white border border-teal-200 rounded-3xl px-5 py-6 sm:px-6 sm:py-7">
+        <div class="step-number w-9 h-9 rounded-2xl flex items-center justify-center text-base mb-4">1</div>
+        <h3 class="font-semibold text-lg mb-2">No hacking required</h3>
+        <p class="text-[15px] text-slate-600 leading-relaxed">Attackers don't need access to your email server. They send mail from their own systems with your domain in the From field.</p>
+      </div>
+
+      <div class="service-card bg-white border border-teal-200 rounded-3xl px-5 py-6 sm:px-6 sm:py-7">
+        <div class="step-number w-9 h-9 rounded-2xl flex items-center justify-center text-base mb-4">2</div>
+        <h3 class="font-semibold text-lg mb-2">Familiar sender names</h3>
+        <p class="text-[15px] text-slate-600 leading-relaxed">The display name says CEO, CFO, or IT Support — someone your team recognizes and is used to seeing in their inbox.</p>
+      </div>
+
+      <div class="service-card bg-white border border-teal-200 rounded-3xl px-5 py-6 sm:px-6 sm:py-7">
+        <div class="step-number w-9 h-9 rounded-2xl flex items-center justify-center text-base mb-4">3</div>
+        <h3 class="font-semibold text-lg mb-2">Your real domain</h3>
+        <p class="text-[15px] text-slate-600 leading-relaxed">The address shows your actual domain, not a lookalike typo like <code class="text-xs bg-slate-100 px-1 rounded">yourcornpany.com</code>. That's what makes it believable.</p>
+      </div>
+
+      <div class="service-card bg-white border border-teal-200 rounded-3xl px-5 py-6 sm:px-6 sm:py-7">
+        <div class="step-number w-9 h-9 rounded-2xl flex items-center justify-center text-base mb-4">4</div>
+        <h3 class="font-semibold text-lg mb-2">Urgent language</h3>
+        <p class="text-[15px] text-slate-600 leading-relaxed">Fake invoices, wire transfers, and password resets pressure people to act fast, before they stop to verify by phone or in person.</p>
+      </div>
+
+      <div class="service-card bg-white border border-teal-200 rounded-3xl px-5 py-6 sm:px-6 sm:py-7">
+        <div class="step-number w-9 h-9 rounded-2xl flex items-center justify-center text-base mb-4">5</div>
+        <h3 class="font-semibold text-lg mb-2">No warning banners</h3>
+        <p class="text-[15px] text-slate-600 leading-relaxed">Without email authentication in place, Outlook and other providers often deliver the message with no external-sender label or junk-folder protection.</p>
+      </div>
+
+      <div class="service-card bg-white border border-teal-200 rounded-3xl px-5 py-6 sm:px-6 sm:py-7">
+        <div class="step-number w-9 h-9 rounded-2xl flex items-center justify-center text-base mb-4">6</div>
+        <h3 class="font-semibold text-lg mb-2">Protection is possible</h3>
+        <p class="text-[15px] text-slate-600 leading-relaxed">DMARC, SPF, and DKIM tell inbox providers which mail is really from you. Our free <a href="https://dmarc.network26.com" class="text-teal-700 font-medium hover:text-teal-800 underline underline-offset-2">DMARC checker</a> shows where you stand.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="max-w-6xl mx-auto page-x pt-4 sm:pt-6 pb-4 hidden scroll-mt-[4.5rem] sm:scroll-mt-20"></section>
+
+  <!-- CTA -->
+  <section id="help" class="max-w-5xl mx-auto page-x pt-12 sm:pt-16 pb-14 sm:pb-20">
+    <div class="rounded-3xl hero-bg text-white relative overflow-hidden shadow-sm">
+      <div class="network-pattern absolute inset-0"></div>
+      <div class="relative p-6 sm:p-8 md:p-12">
+        <div class="grid md:grid-cols-5 gap-x-12 gap-y-6 sm:gap-y-8 items-center">
+          <div class="md:col-span-3">
+            <div class="uppercase tracking-[1.5px] text-teal-400 text-xs font-semibold mb-3">MANAGED IT FOR SMBs</div>
+            <h2 class="text-2xl sm:text-3xl tracking-tighter font-semibold leading-tight mb-4">Fix spoofing today. Keep IT covered tomorrow.</h2>
+            <p class="text-slate-300 leading-relaxed max-w-lg">
+              <span class="logo-font text-white">Network<span class="text-teal-400">26</span></span> is managed IT for small and mid-sized businesses in Washington State — proactive monitoring, hands-on help, and day-to-day support your team can count on.
+            </p>
+            <p id="cta-domain-note" class="mt-4 text-sm text-slate-400 hidden">
+              The preview is simulated. Want to see this in your own inbox? We can send an authorized spoofing demo for <span id="cta-domain" class="text-teal-300 font-medium"></span> to your work email.
+            </p>
+          </div>
+          <div class="md:col-span-2 flex flex-col gap-3">
+            <a id="cta-contact-btn" href="https://network26.com/#contact" class="touch-target inline-flex items-center justify-center gap-x-2 w-full px-7 py-3.5 text-base font-semibold rounded-2xl teal-btn shadow-lg text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span id="cta-contact-btn-text">Talk to Network26</span>
+            </a>
+            <a href="tel:4253689526" class="touch-target inline-flex items-center justify-center gap-x-2 w-full px-7 py-3.5 text-base font-semibold rounded-2xl teal-btn shadow-lg text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              Call 425-368-9526
+            </a>
+            <a href="https://dmarc.network26.com" class="text-center text-sm text-slate-400 hover:text-teal-300 transition-colors mt-1">
+              &larr; Back to DMARC Checker
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t bg-white">
+    <div class="max-w-7xl mx-auto page-x py-8 sm:py-9 text-xs">
+      <div class="flex flex-col md:flex-row justify-between gap-y-5 items-center text-slate-500 text-center md:text-left">
+        <div class="flex items-center gap-x-3">
+          <img src="logo-icon.jpg" alt="Network26" class="h-6 w-6 rounded-lg object-cover opacity-80 shrink-0">
+          <div>&copy; 2026 <a href="https://network26.com" class="logo-font hover:text-slate-700 transition-colors"><span class="text-slate-900">Network</span><span class="text-teal-500">26</span></a>. All rights reserved.</div>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center gap-y-2 sm:gap-x-5">
+          <a href="tel:4253689526" class="hover:text-slate-700 transition-colors">425-368-9526</a>
+          <a href="mailto:info@network26.com" class="hover:text-slate-700 transition-colors">info@network26.com</a>
+        </div>
+        <div class="text-[10px] leading-relaxed">Educational spoofing demo &bull; Managed IT for SMBs &bull; Greater Puget Sound</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="checker-core.js?v=20260713" defer></script>
+  <script src="spoof-demo.js?v=20260718" defer></script>
+  <script>
+    function initMobileMenu() {
+      const btn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('menu-icon');
+
+      btn.addEventListener('click', () => {
+        const isHidden = menu.classList.contains('hidden');
+        menu.classList.toggle('hidden');
+        btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+
+        if (isHidden) {
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />';
+        } else {
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25" d="M4 6h16M4 12h16M4 18h16" />';
+        }
+      });
+
+      document.querySelectorAll('.mobile-link').forEach((link) => {
+        link.addEventListener('click', () => {
+          menu.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25" d="M4 6h16M4 12h16M4 18h16" />';
+        });
+      });
+    }
+    initMobileMenu();
+  </script>
+</body>
+</html>
