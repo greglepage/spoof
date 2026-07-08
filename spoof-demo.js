@@ -72,6 +72,20 @@
     return SCENARIOS[key] || SCENARIOS.invoice;
   }
 
+  function getDeliveryOutcome(data) {
+    const { spoofRisk, dmarc } = data;
+    if (spoofRisk?.deliveryOutcome) return spoofRisk.deliveryOutcome;
+
+    const exposure = spoofRisk?.exposure || spoofRisk?.risk || 'partial';
+    if (exposure === 'junk' || exposure === 'blocked') return exposure;
+
+    const policy = dmarc?.tags?.p?.toLowerCase() || null;
+    if (exposure === 'protected' || spoofRisk?.risk === 'low') {
+      return policy === 'reject' ? 'blocked' : 'junk';
+    }
+    return 'inbox';
+  }
+
   function getTechnicalWhy(data, exposure) {
     const level = normalizeExposure(exposure);
     const issues = data.status?.issues || [];
@@ -118,10 +132,21 @@
       return 'Your DNS gives providers mixed signals about spoofed mail, so some may still deliver messages like this.';
     }
 
-    if (policy === 'reject') {
-      return 'Your DMARC reject policy tells major providers to block spoofed mail, though attackers still send messages like this.';
+    if (level === 'blocked' || policy === 'reject') {
+      let msg = 'Your DMARC reject policy tells major providers to refuse spoofed mail before delivery, though attackers still send messages like this.';
+      if (issues.includes('spf-softfail')) {
+        msg += ' Your SPF uses ~all; consider switching to -all for a harder fail.';
+      }
+      return msg;
     }
-    return 'Your DMARC quarantine policy tells major providers to junk spoofed mail, though attackers still send messages like this.';
+    if (level === 'junk' || policy === 'quarantine') {
+      let msg = 'Your DMARC quarantine policy tells major providers to route spoofed mail to Junk instead of the inbox, though attackers still send messages like this.';
+      if (issues.includes('spf-softfail')) {
+        msg += ' Your SPF uses ~all; consider switching to -all for a harder fail.';
+      }
+      return msg;
+    }
+    return 'Your DNS gives providers mixed signals about spoofed mail, so some may still deliver messages like this.';
   }
 
   function getScenarioWhyItWorks(scenarioKey, data) {
@@ -147,10 +172,12 @@
     const map = {
       exposed: 'exposed',
       partial: 'partial',
-      protected: 'protected',
+      junk: 'junk',
+      blocked: 'blocked',
+      protected: 'blocked',
       high: 'exposed',
       medium: 'partial',
-      low: 'protected',
+      low: 'blocked',
     };
     return map[exposureOrRisk] || 'partial';
   }
@@ -169,7 +196,13 @@
         label: 'May deliver',
         labelColor: 'text-amber-700',
       },
-      protected: {
+      junk: {
+        bg: 'bg-amber-50 border-amber-200',
+        dot: 'bg-amber-500',
+        label: 'Likely junked',
+        labelColor: 'text-amber-800',
+      },
+      blocked: {
         bg: 'bg-teal-50 border-teal-200',
         dot: 'bg-teal-500',
         label: 'Likely blocked',
@@ -177,6 +210,15 @@
       },
     };
     return map[exposure] || map.partial;
+  }
+
+  function previewCaption(deliveryOutcome) {
+    const map = {
+      inbox: 'Simulated Outlook inbox, for illustration only',
+      junk: 'Simulated Junk folder — not the inbox',
+      blocked: 'Simulated blocked delivery — message never arrives',
+    };
+    return map[deliveryOutcome] || map.inbox;
   }
 
   function getAuthRecordStatuses(data) {
@@ -204,7 +246,15 @@
     } else if (issues.includes('spf-allow-all')) {
       records.push({ name: 'SPF', state: 'missing', label: 'Allows anyone', detail: '+all lets any server pass SPF checks' });
     } else if (issues.includes('spf-softfail')) {
-      records.push({ name: 'SPF', state: 'warn', label: 'Soft fail', detail: '~all may still allow spoofed mail through' });
+      const enforcedDmarc = policy === 'quarantine' || policy === 'reject';
+      records.push({
+        name: 'SPF',
+        state: 'warn',
+        label: 'Soft fail',
+        detail: enforcedDmarc
+          ? '~all is weaker than -all; tighten when you can'
+          : '~all may still allow spoofed mail through',
+      });
     } else {
       records.push({ name: 'SPF', state: 'ok', label: 'Configured', detail: 'Sender list found in DNS' });
     }
@@ -288,20 +338,7 @@
     return scenario.audience === 'customer';
   }
 
-  function renderOutlookPreview(domain, scenario, exposure) {
-    const spoofFrom = buildSpoofAddress(domain, scenario);
-    const customerView = isCustomerScenario(scenario);
-    const initials = scenario.displayName.slice(0, 1).toUpperCase();
-    const timeFull = new Date().toLocaleDateString('en-US', {
-      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
-    });
-
-    const blockedBanner = exposure === 'protected'
-      ? `<div class="mx-4 mt-3 px-3 py-2 rounded-md bg-teal-50 border border-teal-200 text-xs text-teal-800">
-           With your current protection, Outlook would likely move this to Junk or block it entirely.
-         </div>`
-      : '';
-
+  function buildScenarioMessageParts(domain, scenario) {
     const attachmentHtml = scenario.attachment
       ? `<div class="mt-4 flex items-center gap-2.5 p-2.5 rounded border border-[#edebe9] bg-[#faf9f8] max-w-xs">
            <div class="w-8 h-8 rounded bg-[#d13438] text-white flex items-center justify-center text-[10px] font-bold shrink-0">PDF</div>
@@ -319,15 +356,54 @@
 
     const bodyHtml = scenario.body.map((p) => `<p class="m-0 mb-3">${escapeHtml(p)}</p>`).join('');
 
+    return { attachmentHtml, linkHtml, bodyHtml };
+  }
+
+  function renderOutlookChrome(folderLabel, folderTone = 'inbox') {
+    const headerClass = folderTone === 'junk'
+      ? 'bg-[#5c2d91]'
+      : 'bg-[#0078d4]';
+
+    return `
+      <div class="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 ${headerClass} text-white shrink-0">
+        <div class="flex items-center gap-1.5 shrink-0">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
+          <span class="text-xs sm:text-sm font-semibold">Outlook</span>
+        </div>
+        <div class="flex-1 text-center text-[10px] sm:text-xs text-white/80 truncate">${escapeHtml(folderLabel)}</div>
+      </div>`;
+  }
+
+  function renderMessageHeader(domain, scenario) {
+    const spoofFrom = buildSpoofAddress(domain, scenario);
+    const customerView = isCustomerScenario(scenario);
+    const initials = scenario.displayName.slice(0, 1).toUpperCase();
+    const timeFull = new Date().toLocaleDateString('en-US', {
+      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
+    });
+
+    return `
+      <h2 class="text-base sm:text-xl font-semibold text-[#323130] mb-4 leading-snug shrink-0">${escapeHtml(scenario.subject)}</h2>
+      <div class="flex items-start gap-3 mb-5 pb-4 border-b border-[#edebe9]">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#0078d4] text-white flex items-center justify-center text-sm font-semibold shrink-0">${escapeHtml(initials)}</div>
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <span class="font-semibold text-sm sm:text-base text-[#323130]">${escapeHtml(scenario.displayName)}</span>
+            <span class="text-xs text-[#605e5c] break-all">&lt;${escapeHtml(spoofFrom)}&gt;</span>
+          </div>
+          <div class="text-[10px] sm:text-xs text-[#605e5c] mt-1">${customerView ? 'To: Valued Customer' : 'To: You'}</div>
+          <div class="text-[10px] text-[#a19f9d] mt-0.5">${escapeHtml(timeFull)}</div>
+        </div>
+      </div>`;
+  }
+
+  function renderOutlookInboxPreview(domain, scenario) {
+    const customerView = isCustomerScenario(scenario);
+    const { attachmentHtml, linkHtml, bodyHtml } = buildScenarioMessageParts(domain, scenario);
+
     return `
       <div class="outlook-app relative h-full flex flex-col rounded-2xl overflow-hidden border border-[#edebe9] shadow-xl bg-white text-[#323130]">
-        <div class="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 bg-[#0078d4] text-white shrink-0">
-          <div class="flex items-center gap-1.5 shrink-0">
-            <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
-            <span class="text-xs sm:text-sm font-semibold">Outlook</span>
-          </div>
-          <div class="flex-1 text-center text-[10px] sm:text-xs text-white/80 truncate">Inbox</div>
-        </div>
+        ${renderOutlookChrome('Inbox', 'inbox')}
 
         <div class="flex flex-1 flex-col min-h-0 bg-white">
           <div class="flex items-center gap-1 px-3 py-1.5 border-b border-[#edebe9] text-[#605e5c] shrink-0">
@@ -335,21 +411,8 @@
             <span class="text-[10px] px-2 py-1 rounded shrink-0">Forward</span>
           </div>
 
-          ${blockedBanner}
-
           <div class="p-4 sm:p-6 flex-1 flex flex-col min-h-0">
-            <h2 class="text-base sm:text-xl font-semibold text-[#323130] mb-4 leading-snug shrink-0">${escapeHtml(scenario.subject)}</h2>
-            <div class="flex items-start gap-3 mb-5 pb-4 border-b border-[#edebe9]">
-              <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#0078d4] text-white flex items-center justify-center text-sm font-semibold shrink-0">${escapeHtml(initials)}</div>
-              <div class="min-w-0 flex-1">
-                <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                  <span class="font-semibold text-sm sm:text-base text-[#323130]">${escapeHtml(scenario.displayName)}</span>
-                  <span class="text-xs text-[#605e5c] break-all">&lt;${escapeHtml(spoofFrom)}&gt;</span>
-                </div>
-                <div class="text-[10px] sm:text-xs text-[#605e5c] mt-1">${customerView ? 'To: Valued Customer' : 'To: You'}</div>
-                <div class="text-[10px] text-[#a19f9d] mt-0.5">${escapeHtml(timeFull)}</div>
-              </div>
-            </div>
+            ${renderMessageHeader(domain, scenario)}
             <div class="text-sm sm:text-[15px] text-[#323130] leading-relaxed">
               ${bodyHtml}
               <p class="m-0">Thanks,<br>${escapeHtml(scenario.displayName)}</p>
@@ -361,34 +424,146 @@
 
         <div class="px-4 py-2 bg-[#faf9f8] border-t border-[#edebe9] text-[10px] text-[#605e5c] text-center shrink-0">
           ${customerView
-            ? 'Simulated Outlook message. What one of your customers might see in their inbox.'
-            : 'Simulated Outlook message. What an employee might see in their inbox.'}
+            ? 'Simulated inbox delivery. What one of your customers might see if spoofed mail gets through.'
+            : 'Simulated inbox delivery. What an employee might see if spoofed mail gets through.'}
         </div>
       </div>`;
+  }
+
+  function renderOutlookJunkPreview(domain, scenario) {
+    const customerView = isCustomerScenario(scenario);
+    const { attachmentHtml, linkHtml, bodyHtml } = buildScenarioMessageParts(domain, scenario);
+
+    return `
+      <div class="outlook-app relative h-full flex flex-col rounded-2xl overflow-hidden border border-[#edebe9] shadow-xl bg-white text-[#323130]">
+        ${renderOutlookChrome('Junk Email', 'junk')}
+
+        <div class="flex flex-1 flex-col min-h-0 bg-white">
+          <div class="flex items-center gap-1 px-3 py-1.5 border-b border-[#edebe9] text-[#605e5c] shrink-0">
+            <span class="text-[10px] px-2 py-1 rounded shrink-0">Not junk</span>
+            <span class="text-[10px] px-2 py-1 rounded shrink-0">Delete</span>
+          </div>
+
+          <div class="mx-4 mt-3 px-3 py-2 rounded-md bg-amber-50 border border-amber-200 text-xs text-amber-900">
+            DMARC quarantine routed this to Junk. It should not appear in the inbox, but some users still check spam folders.
+          </div>
+
+          <div class="p-4 sm:p-6 flex-1 flex flex-col min-h-0">
+            ${renderMessageHeader(domain, scenario)}
+            <div class="text-sm sm:text-[15px] text-[#323130] leading-relaxed">
+              ${bodyHtml}
+              <p class="m-0">Thanks,<br>${escapeHtml(scenario.displayName)}</p>
+              ${linkHtml}
+              ${attachmentHtml}
+            </div>
+          </div>
+        </div>
+
+        <div class="px-4 py-2 bg-[#faf9f8] border-t border-[#edebe9] text-[10px] text-[#605e5c] text-center shrink-0">
+          ${customerView
+            ? 'Simulated Junk folder. What a customer might see if they open spam — not a normal inbox delivery.'
+            : 'Simulated Junk folder. What an employee might see if they open spam — not a normal inbox delivery.'}
+        </div>
+      </div>`;
+  }
+
+  function renderOutlookBlockedPreview(domain, scenario) {
+    const spoofFrom = buildSpoofAddress(domain, scenario);
+    const customerView = isCustomerScenario(scenario);
+
+    return `
+      <div class="outlook-app relative h-full flex flex-col rounded-2xl overflow-hidden border border-[#edebe9] shadow-xl bg-white text-[#323130]">
+        ${renderOutlookChrome('Inbox', 'inbox')}
+
+        <div class="flex flex-1 flex-col min-h-0 bg-[#faf9f8]">
+          <div class="flex-1 flex flex-col items-center justify-center p-6 sm:p-8 text-center">
+            <div class="w-14 h-14 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center mb-4">
+              <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 5c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
+              </svg>
+            </div>
+            <h2 class="text-lg sm:text-xl font-semibold text-[#323130] m-0">Message not delivered</h2>
+            <p class="text-sm text-[#605e5c] mt-2 max-w-md m-0">
+              Outlook rejected this message because it failed authentication for <strong class="text-[#323130]">${escapeHtml(domain)}</strong>.
+              With DMARC reject, it should never reach the inbox or Junk folder.
+            </p>
+
+            <div class="mt-5 w-full max-w-md rounded-xl border border-[#edebe9] bg-white p-4 text-left">
+              <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Attempted spoof</div>
+              <div class="text-sm font-semibold text-[#323130]">${escapeHtml(scenario.subject)}</div>
+              <div class="text-xs text-[#605e5c] mt-1 break-all">${escapeHtml(scenario.displayName)} &lt;${escapeHtml(spoofFrom)}&gt;</div>
+              <div class="text-[10px] text-[#a19f9d] mt-2">${customerView ? 'To: Valued Customer' : 'To: You'}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-4 py-2 bg-white border-t border-[#edebe9] text-[10px] text-[#605e5c] text-center shrink-0">
+          ${customerView
+            ? 'Simulated blocked delivery. Attackers still try to send this, but customers should never receive it.'
+            : 'Simulated blocked delivery. Attackers still try to send this, but employees should never receive it.'}
+        </div>
+      </div>`;
+  }
+
+  function renderOutlookPreview(domain, scenario, deliveryOutcome) {
+    if (deliveryOutcome === 'blocked') return renderOutlookBlockedPreview(domain, scenario);
+    if (deliveryOutcome === 'junk') return renderOutlookJunkPreview(domain, scenario);
+    return renderOutlookInboxPreview(domain, scenario);
   }
 
   function renderEducationalSidebar(data, scenario, scenarioKey) {
     const { domain, spoofRisk } = data;
     const spoofFrom = buildSpoofAddress(domain, scenario);
-    const exposure = spoofRisk?.exposure || spoofRisk?.risk || 'partial';
+    const deliveryOutcome = getDeliveryOutcome(data);
     const { social: whySocial, technical: whyTechnical } = getScenarioWhyItWorks(scenarioKey, data);
     const customerView = isCustomerScenario(scenario);
-    const recipientBullets = customerView
-      ? [
-          `A familiar sender like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> appears with your company name`,
-          `Your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address`,
-          'Urgent account or service language that pushes customers to act before calling you',
-        ]
-      : [
-          `In Outlook, a familiar name like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> appears in the sender field`,
-          `Your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address`,
-          'Urgent, routine-sounding language that pressures fast action without verification',
-        ];
+
+    const recipientTitle = deliveryOutcome === 'blocked'
+      ? 'What attackers still try'
+      : deliveryOutcome === 'junk'
+        ? (customerView ? 'What may appear in Junk' : 'What may appear in Junk')
+        : (customerView ? 'What customers see' : 'What recipients see');
+
+    const recipientBullets = deliveryOutcome === 'blocked'
+      ? (customerView
+        ? [
+            `Attackers forge a familiar sender like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> with your company name`,
+            `They use your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address`,
+            'With DMARC reject, providers should refuse delivery before anyone sees the message',
+          ]
+        : [
+            `Attackers forge a familiar name like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> in the sender field`,
+            `They use your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address`,
+            'With DMARC reject, providers should refuse delivery before employees see the message',
+          ])
+      : deliveryOutcome === 'junk'
+        ? (customerView
+          ? [
+              `A familiar sender like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> can still appear with your company name`,
+              `Your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address`,
+              'Junk is better than inbox, but some people still open spam and act on urgent requests',
+            ]
+          : [
+              `A familiar name like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> can still appear in the sender field`,
+              `Your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address`,
+              'Junk is better than inbox, but some employees still open spam and act without verifying',
+            ])
+        : (customerView
+          ? [
+              `A familiar sender like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> appears with your company name`,
+              `Your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address`,
+              'Urgent account or service language that pushes customers to act before calling you',
+            ]
+          : [
+              `In Outlook, a familiar name like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> appears in the sender field`,
+              `Your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address`,
+              'Urgent, routine-sounding language that pressures fast action without verification',
+            ]);
 
     return `
       <div class="space-y-4">
         <div class="rounded-2xl border border-slate-200 bg-white p-5">
-          <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-3">${customerView ? 'What customers see' : 'What recipients see'}</div>
+          <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-3">${recipientTitle}</div>
           <ul class="space-y-3 text-sm text-slate-600">
             ${recipientBullets.map((text, i) => `
             <li class="flex items-start gap-2.5">
@@ -488,8 +663,8 @@
   }
 
   function renderResults(data, scenarioKey = 'invoice') {
-    const { domain, spoofRisk } = data;
-    const exposure = spoofRisk.exposure || spoofRisk.risk || 'partial';
+    const { domain } = data;
+    const deliveryOutcome = getDeliveryOutcome(data);
     const scenario = getScenario(scenarioKey);
 
     return `
@@ -505,9 +680,9 @@
       <div class="grid lg:grid-cols-5 lg:items-stretch gap-6 sm:gap-8 mb-8 sm:mb-10">
         <div class="lg:col-span-3 min-w-0 flex flex-col">
           <div id="preview-container" class="relative flex-1 flex flex-col min-h-0">
-            ${renderOutlookPreview(domain, scenario, exposure)}
+            ${renderOutlookPreview(domain, scenario, deliveryOutcome)}
           </div>
-          <p class="text-xs text-slate-400 text-center mt-3 lg:hidden">Simulated Outlook inbox, for illustration only</p>
+          <p id="preview-caption" class="text-xs text-slate-400 text-center mt-3 lg:hidden">${escapeHtml(previewCaption(deliveryOutcome))}</p>
         </div>
         <div id="educational-sidebar" class="lg:col-span-2 min-w-0">
           ${renderEducationalSidebar(data, scenario, scenarioKey)}
@@ -525,13 +700,18 @@
   }
 
   function refreshPreview(data, scenarioKey) {
-    const { domain, spoofRisk } = data;
-    const exposure = spoofRisk.exposure || spoofRisk.risk || 'partial';
+    const { domain } = data;
+    const deliveryOutcome = getDeliveryOutcome(data);
     const scenario = getScenario(scenarioKey);
 
     const container = document.getElementById('preview-container');
     if (container) {
-      container.innerHTML = renderOutlookPreview(domain, scenario, exposure);
+      container.innerHTML = renderOutlookPreview(domain, scenario, deliveryOutcome);
+    }
+
+    const caption = document.getElementById('preview-caption');
+    if (caption) {
+      caption.textContent = previewCaption(deliveryOutcome);
     }
 
     const sidebar = document.getElementById('educational-sidebar');

@@ -201,20 +201,34 @@
         headline = 'Fake emails can still be delivered while you\'re only watching.';
         explanation = 'Your protection is set to monitor, not block. Messages like the one below can reach inboxes today. The preview shows what your employees would see.';
       }
-    } else if (!hasEnforcedDmarc || issues.includes('spf-softfail') || issues.includes('no-dkim')) {
+    } else if (!hasEnforcedDmarc || issues.includes('no-dkim') || (issues.includes('spf-softfail') && !hasEnforcedDmarc)) {
       exposure = 'partial';
       deliveryLikelihood = 'medium';
       headline = 'Some providers may deliver this. Others might not.';
       explanation = 'You have partial protection, but spoofed mail can still slip through at less strict inbox providers. It only takes one employee acting on a message like this.';
-    } else if (hasEnforcedDmarc) {
-      exposure = 'protected';
+    } else if (policy === 'reject') {
+      exposure = 'blocked';
       deliveryLikelihood = 'low';
-      headline = 'Your protection should block emails like this.';
-      explanation = 'Most major inbox providers should reject or quarantine spoofed mail from your domain. The preview below shows what attackers still try to send, and why fixing records matters even when you\'re protected.';
+      headline = 'Spoofed mail should never be delivered.';
+      explanation = 'Your DMARC reject policy tells providers to refuse spoofed mail at the gateway. The preview below shows what attackers still try — and that it should never reach any folder.';
+      if (issues.includes('spf-softfail')) {
+        explanation += ' Your SPF uses ~all; tightening to -all is still recommended, but spoofed mail should still be refused.';
+      }
+    } else if (policy === 'quarantine') {
+      exposure = 'junk';
+      deliveryLikelihood = 'low';
+      headline = 'Spoofed mail should land in Junk, not the inbox.';
+      explanation = 'Your DMARC quarantine policy tells providers to route failed authentication to Junk. The preview below shows what that looks like if someone opens their spam folder.';
+      if (issues.includes('spf-softfail')) {
+        explanation += ' Your SPF uses ~all; tightening to -all is still recommended.';
+      }
     }
+
+    const deliveryOutcome = exposure === 'junk' ? 'junk' : exposure === 'blocked' ? 'blocked' : 'inbox';
 
     return {
       exposure,
+      deliveryOutcome,
       risk: exposure === 'exposed' ? 'high' : exposure === 'partial' ? 'medium' : 'low',
       headline,
       explanation,
