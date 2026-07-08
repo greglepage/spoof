@@ -307,7 +307,7 @@
     const ctaBtnText = document.getElementById('cta-contact-btn-text');
     if (ctaDomain) ctaDomain.textContent = domain;
     if (ctaNote) ctaNote.classList.remove('hidden');
-    if (ctaBtnText) ctaBtnText.textContent = 'Request Live Demo';
+    if (ctaBtnText) ctaBtnText.textContent = 'Contact Us';
   }
 
   function refreshPreview(data, scenarioKey) {
