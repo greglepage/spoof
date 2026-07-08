@@ -176,7 +176,7 @@
             return `
               <div class="rounded-xl border ${styles.card} p-3 min-w-0">
                 <div class="flex items-center justify-between gap-2 mb-1">
-                  <span class="text-xs font-semibold tracking-wide text-slate-500">${escapeHtml(record.name)}</span>
+                  <span class="text-xs font-bold tracking-wide text-slate-700">${escapeHtml(record.name)}</span>
                   <span class="inline-flex items-center px-2 py-0.5 rounded-lg border text-[11px] font-semibold ${styles.chip}">${escapeHtml(record.label)}</span>
                 </div>
                 <p class="text-xs text-slate-600 leading-snug m-0">${escapeHtml(record.detail)}</p>
@@ -198,11 +198,11 @@
             <div class="w-2 h-2 rounded-full ${badge.dot} shrink-0"></div>
             <span class="text-[11px] font-bold uppercase tracking-wider ${badge.labelColor}">What would actually happen</span>
           </div>
-          <span class="text-xs text-slate-600">for <span class="font-semibold text-slate-800">${escapeHtml(domain)}</span></span>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] font-semibold ${badge.labelColor} ${badge.bg} sm:ml-auto shrink-0">${escapeHtml(badge.label)}</span>
+          <span class="text-xs text-slate-600">for <span class="font-bold text-slate-900">${escapeHtml(domain)}</span></span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] font-bold ${badge.labelColor} ${badge.bg} sm:ml-auto shrink-0">${escapeHtml(badge.label)}</span>
         </div>
 
-        <p class="text-base sm:text-lg font-semibold text-slate-900 leading-snug m-0">${escapeHtml(spoofRisk.headline || 'This email could land in your employees\' inboxes.')}</p>
+        <p class="text-base sm:text-lg font-bold text-slate-900 leading-snug m-0">${escapeHtml(spoofRisk.headline || 'This email could land in your employees\' inboxes.')}</p>
         <p class="text-sm text-slate-600 mt-1.5 leading-snug m-0">${escapeHtml(spoofRisk.explanation || '')}</p>
 
         ${renderCompactRecordTiles(data)}
@@ -413,8 +413,8 @@
       <div id="results-header">${renderDeliveryOutlookTile(data)}</div>
 
       <div class="mb-4 sm:mb-5 text-center">
-        <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-2">Simulated Outlook preview</div>
-        <p class="text-sm text-slate-600 mb-3">Choose a common scam scenario to see what employees might receive.</p>
+        <div class="text-sm font-bold text-slate-900 mb-1.5">Simulated Outlook preview</div>
+        <p class="text-sm text-slate-600 mb-3">Choose a <strong class="font-semibold text-slate-800">common scam scenario</strong> to see what employees might receive.</p>
         <div class="flex flex-wrap justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 p-1.5 max-w-lg mx-auto" role="tablist" aria-label="Spoof scenario">
           ${renderScenarioPicker(scenarioKey)}
         </div>
