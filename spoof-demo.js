@@ -47,6 +47,21 @@
       attachment: null,
       fakeLink: 'https://secure-login.example.com/reset',
     },
+    customer: {
+      label: 'Customer phishing',
+      audience: 'customer',
+      displayName: 'Billing',
+      localPart: 'billing',
+      subject: 'Important: Updated payment instructions',
+      preview: 'We have updated our payment details. Please review the link below before sending your next payment.',
+      body: [
+        'Dear valued customer,',
+        'We are updating how we receive payments. Please review the new wire and ACH details at the link below before your next invoice is due.',
+        'If you have already sent a recent payment, please confirm it went to the correct account.',
+      ],
+      attachment: null,
+      fakeLink: 'https://payments.example.com/account-update',
+    },
   };
 
   function escapeHtml(str) {
@@ -67,6 +82,7 @@
       invoice: 'Trusted CEO name, your real domain, PDF attached. Urgent invoices often get paid without a call.',
       wire: 'CFO authority plus "in meetings" wording rushes wire transfers before anyone verifies.',
       it: 'IT lockout fear pushes people to click reset links before checking with real support.',
+      customer: 'Customers trust mail from your domain. A billing update feels routine, so payments or account details get changed before anyone calls you.',
     };
     const technical = {
       exposed: 'Your DNS does not block this, so it can reach inboxes looking like the preview.',
@@ -225,8 +241,13 @@
       </div>`;
   }
 
+  function isCustomerScenario(scenario) {
+    return scenario.audience === 'customer';
+  }
+
   function renderOutlookPreview(domain, scenario, exposure) {
     const spoofFrom = buildSpoofAddress(domain, scenario);
+    const customerView = isCustomerScenario(scenario);
     const initials = scenario.displayName.slice(0, 1).toUpperCase();
     const timeFull = new Date().toLocaleDateString('en-US', {
       weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
@@ -282,7 +303,7 @@
                   <span class="font-semibold text-sm sm:text-base text-[#323130]">${escapeHtml(scenario.displayName)}</span>
                   <span class="text-xs text-[#605e5c] break-all">&lt;${escapeHtml(spoofFrom)}&gt;</span>
                 </div>
-                <div class="text-[10px] sm:text-xs text-[#605e5c] mt-1">To: You</div>
+                <div class="text-[10px] sm:text-xs text-[#605e5c] mt-1">${customerView ? 'To: Valued Customer' : 'To: You'}</div>
                 <div class="text-[10px] text-[#a19f9d] mt-0.5">${escapeHtml(timeFull)}</div>
               </div>
             </div>
@@ -296,7 +317,9 @@
         </div>
 
         <div class="px-4 py-2 bg-[#faf9f8] border-t border-[#edebe9] text-[10px] text-[#605e5c] text-center">
-          Simulated Outlook message. What an employee might see in their inbox.
+          ${customerView
+            ? 'Simulated Outlook message. What one of your customers might see in their inbox.'
+            : 'Simulated Outlook message. What an employee might see in their inbox.'}
         </div>
       </div>`;
   }
@@ -306,24 +329,29 @@
     const spoofFrom = buildSpoofAddress(domain, scenario);
     const exposure = spoofRisk?.exposure || spoofRisk?.risk || 'partial';
     const { social: whySocial, technical: whyTechnical } = getScenarioWhyItWorks(scenarioKey, exposure);
+    const customerView = isCustomerScenario(scenario);
+    const recipientBullets = customerView
+      ? [
+          `A familiar sender like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> appears with your company name`,
+          `Your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address`,
+          'Payment or account-update language that pushes customers to act before calling you',
+        ]
+      : [
+          `In Outlook, a familiar name like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> appears in the sender field`,
+          `Your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address`,
+          'Urgent, routine-sounding language that pressures fast action without verification',
+        ];
 
     return `
       <div class="space-y-4">
         <div class="rounded-2xl border border-slate-200 bg-white p-5">
-          <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-3">What recipients see</div>
+          <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-3">${customerView ? 'What customers see' : 'What recipients see'}</div>
           <ul class="space-y-3 text-sm text-slate-600">
+            ${recipientBullets.map((text, i) => `
             <li class="flex items-start gap-2.5">
-              <span class="w-5 h-5 rounded-md bg-violet-100 text-violet-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">1</span>
-              <span>In Outlook, a familiar name like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> appears in the sender field</span>
-            </li>
-            <li class="flex items-start gap-2.5">
-              <span class="w-5 h-5 rounded-md bg-violet-100 text-violet-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">2</span>
-              <span>Your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address</span>
-            </li>
-            <li class="flex items-start gap-2.5">
-              <span class="w-5 h-5 rounded-md bg-violet-100 text-violet-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">3</span>
-              <span>Urgent, routine-sounding language that pressures fast action without verification</span>
-            </li>
+              <span class="w-5 h-5 rounded-md bg-violet-100 text-violet-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">${i + 1}</span>
+              <span>${text}</span>
+            </li>`).join('')}
           </ul>
         </div>
 
