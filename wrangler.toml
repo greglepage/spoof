@@ -1,0 +1,6 @@
+name = "spoof-demo"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "."
+
+[vars]
+ENVELOPE_FROM = "Network26 Spoof Demo <demo@mail.network26.com>"

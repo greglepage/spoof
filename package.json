@@ -1,0 +1,15 @@
+{
+  "name": "spoof-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Network26 email spoofing demonstration tool",
+  "scripts": {
+    "deploy": "wrangler pages deploy . --project-name=spoof-demo",
+    "deploy:worker": "wrangler deploy worker/src/index.js --name=spoof-demo-api",
+    "dev": "wrangler pages dev . --port=3456",
+    "serve": "npx --yes serve . -p 3456"
+  },
+  "devDependencies": {
+    "wrangler": "^3.99.0"
+  }
+}
