@@ -563,13 +563,6 @@
       handleCheck(prefill);
     }
 
-    document.querySelectorAll('[data-example-domain]').forEach((el) => {
-      el.addEventListener('click', (e) => {
-        e.preventDefault();
-        input.value = el.dataset.exampleDomain;
-        handleCheck(el.dataset.exampleDomain);
-      });
-    });
   }
 
   window.addEventListener('DOMContentLoaded', init);
