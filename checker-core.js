@@ -171,7 +171,7 @@
 
     let exposure = 'exposed';
     let headline = 'This email could land in your employees\' inboxes.';
-    let explanation = 'Anyone can put your domain in the From field without hacking your servers. Without email authentication, inbox providers often deliver messages that look exactly like the preview below.';
+    let explanation = 'We checked your domain\'s public DNS records. Based on what\'s missing below, inbox providers may deliver spoofed messages that look exactly like the preview.';
     let deliveryLikelihood = 'high';
 
     const hasEnforcedDmarc = policy === 'quarantine' || policy === 'reject';
