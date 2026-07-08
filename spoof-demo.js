@@ -48,7 +48,7 @@
       fakeLink: 'https://secure-login.example.com/reset',
     },
     customer: {
-      label: 'Customer payment scam',
+      label: 'Email your customers',
       audience: 'customer',
       displayName: 'Billing',
       localPart: 'billing',
