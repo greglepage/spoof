@@ -48,7 +48,7 @@
       fakeLink: 'https://secure-login.example.com/reset',
     },
     customer: {
-      label: 'Customer phishing',
+      label: 'Fake customer email',
       audience: 'customer',
       displayName: 'Billing',
       localPart: 'billing',
