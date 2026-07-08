@@ -171,21 +171,29 @@
     }).join('');
   }
 
-  function renderDeliveryOutlookCard(data) {
+  function renderDeliveryOutlookTile(data) {
     const { domain, spoofRisk } = data;
     const exposure = normalizeExposure(spoofRisk.exposure || spoofRisk.risk || 'partial');
     const badge = deliveryBadge(exposure);
 
     return `
-      <div id="delivery-outlook" class="rounded-2xl border ${badge.bg} p-4">
-        <div class="flex items-center justify-between gap-2 mb-2">
-          <div class="text-xs font-bold uppercase tracking-wider ${badge.labelColor}">What would actually happen</div>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] font-semibold ${badge.labelColor} ${badge.bg} shrink-0">${escapeHtml(badge.label)}</span>
+      <div id="delivery-outlook" class="rounded-2xl border ${badge.bg} px-4 py-3.5 sm:px-5 sm:py-4 mb-4 sm:mb-5 max-w-3xl mx-auto scroll-mt-[4.5rem] sm:scroll-mt-20">
+        <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 mb-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <div class="w-2 h-2 rounded-full ${badge.dot} shrink-0"></div>
+            <span class="text-[11px] font-bold uppercase tracking-wider ${badge.labelColor}">What would actually happen</span>
+          </div>
+          <span class="text-xs text-slate-600">for <span class="font-semibold text-slate-800">${escapeHtml(domain)}</span></span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] font-semibold ${badge.labelColor} ${badge.bg} sm:ml-auto shrink-0">${escapeHtml(badge.label)}</span>
         </div>
-        <p class="text-sm font-semibold text-slate-900 leading-snug m-0">${escapeHtml(spoofRisk.headline || 'This email could land in your employees\' inboxes.')}</p>
-        <p class="text-xs text-slate-600 mt-1.5 leading-relaxed m-0">${escapeHtml(spoofRisk.explanation || '')}</p>
-        <div class="flex flex-wrap gap-1.5 mt-3">${renderCompactRecordChips(data)}</div>
-        <p class="text-[11px] text-slate-500 mt-2.5 m-0">DNS check for <span class="font-medium text-slate-700">${escapeHtml(domain)}</span></p>
+
+        <p class="text-base sm:text-lg font-semibold text-slate-900 leading-snug m-0">${escapeHtml(spoofRisk.headline || 'This email could land in your employees\' inboxes.')}</p>
+        <p class="text-sm text-slate-600 mt-1.5 leading-snug m-0">${escapeHtml(spoofRisk.explanation || '')}</p>
+
+        <div class="flex flex-wrap items-center gap-1.5 mt-3 pt-3 border-t border-black/5">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mr-0.5">DNS</span>
+          ${renderCompactRecordChips(data)}
+        </div>
       </div>`;
   }
 
@@ -271,8 +279,6 @@
 
     return `
       <div class="space-y-4">
-        ${renderDeliveryOutlookCard(data)}
-
         <div class="rounded-2xl border border-slate-200 bg-white p-5">
           <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase mb-3">What recipients see</div>
           <ul class="space-y-3 text-sm text-slate-600">
@@ -392,7 +398,9 @@
     const scenario = getScenario(scenarioKey);
 
     return `
-      <div id="results-header" class="mb-5 sm:mb-6 text-center scroll-mt-[4.5rem] sm:scroll-mt-20">
+      <div id="results-header">${renderDeliveryOutlookTile(data)}</div>
+
+      <div class="mb-4 sm:mb-5 text-center">
         <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase">Spoof awareness preview</div>
         <div class="text-base sm:text-lg font-semibold text-slate-900 mt-0.5 break-words">What a fake email from ${escapeHtml(domain)} could look like</div>
       </div>
