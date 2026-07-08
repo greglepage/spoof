@@ -50,17 +50,17 @@
     customer: {
       label: 'Email your customers',
       audience: 'customer',
-      displayName: 'Billing',
-      localPart: 'billing',
-      subject: 'Important: Updated payment instructions',
-      preview: 'We have updated our payment details. Please review the link below before sending your next payment.',
+      displayName: 'Customer Support',
+      localPart: 'support',
+      subject: 'Important: Action needed on your account',
+      preview: 'We need you to confirm your account details to keep your service active. Please use the link below today.',
       body: [
         'Dear valued customer,',
-        'We are updating how we receive payments. Please review the new wire and ACH details at the link below before your next invoice is due.',
-        'If you have already sent a recent payment, please confirm it went to the correct account.',
+        'We are reviewing account records and need you to confirm your contact details to avoid a service interruption.',
+        'Please use the secure link below to verify your information. It only takes a minute.',
       ],
       attachment: null,
-      fakeLink: 'https://payments.example.com/account-update',
+      fakeLink: 'https://account.example.com/verify',
     },
   };
 
@@ -82,7 +82,7 @@
       invoice: 'Trusted CEO name, your real domain, PDF attached. Urgent invoices often get paid without a call.',
       wire: 'CFO authority plus "in meetings" wording rushes wire transfers before anyone verifies.',
       it: 'IT lockout fear pushes people to click reset links before checking with real support.',
-      customer: 'Customers trust mail from your domain. A billing update feels routine, so payments or account details get changed before anyone calls you.',
+      customer: 'Customers trust mail from your domain. An urgent account notice feels official, so people click or reply before calling you.',
     };
     const technical = {
       exposed: 'Your DNS does not block this, so it can reach inboxes looking like the preview.',
@@ -334,7 +334,7 @@
       ? [
           `A familiar sender like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> appears with your company name`,
           `Your real domain (<strong class="font-mono text-slate-800">${escapeHtml(spoofFrom)}</strong>), not a lookalike address`,
-          'Payment or account-update language that pushes customers to act before calling you',
+          'Urgent account or service language that pushes customers to act before calling you',
         ]
       : [
           `In Outlook, a familiar name like <strong class="text-slate-800">${escapeHtml(scenario.displayName)}</strong> appears in the sender field`,
@@ -398,7 +398,7 @@
           <div class="service-card bg-white border border-teal-200 rounded-3xl px-5 py-6 sm:px-6 sm:py-7">
             <div class="step-number w-9 h-9 rounded-2xl flex items-center justify-center text-base mb-4">2</div>
             <h3 class="font-semibold text-lg mb-2">Creates urgency</h3>
-            <p class="text-[15px] text-slate-600 leading-relaxed">Fake invoices, wire transfers, password resets, and customer payment scams all pressure people to act fast, before they call to verify. Switch scenarios above to see common attacks attackers use every day.</p>
+            <p class="text-[15px] text-slate-600 leading-relaxed">Fake invoices, wire transfers, password resets, and emails to your customers all pressure people to act fast, before they call to verify. Switch scenarios above to see common attacks attackers use every day.</p>
           </div>
 
           <div class="service-card bg-white border border-teal-200 rounded-3xl px-5 py-6 sm:px-6 sm:py-7">
