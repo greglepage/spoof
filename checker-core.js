@@ -198,7 +198,7 @@
         headline = 'Your team could receive emails exactly like this.';
         explanation = 'Your domain has no email protection telling inbox providers to block impersonation. Attackers don\'t need access to your systems. They just forge your address and send.';
       } else if (issues.includes('dmarc-none')) {
-        headline = 'Fake emails can still be delivered while you\'re only watching.';
+        headline = 'Spoofed emails still reach inboxes — you\'re only monitoring.';
         explanation = 'Your protection is set to monitor, not block. Messages like the one below can reach inboxes today. The preview shows what your employees would see.';
       }
     } else if (!hasEnforcedDmarc || issues.includes('no-dkim') || (issues.includes('spf-softfail') && !hasEnforcedDmarc)) {
