@@ -95,7 +95,7 @@ function buildDemoEmailHtml({ domain, spoofFrom, displayName, risk }) {
   </div>
 
   <p style="font-size: 12px; color: #94a3b8; margin-top: 24px;">
-    Sent by Network26 · 425-368-9526 · info@network26.com<br>
+    Sent by Network26 · 425-368-9526 · hello@network26.com<br>
     Educational spoofing demonstration — you consented to receive this message.
   </p>
 </body>
@@ -117,7 +117,7 @@ async function sendViaResend(env, { to, spoofFrom, displayName, domain, risk }) 
       to: [to],
       subject,
       html: buildDemoEmailHtml({ domain, spoofFrom, displayName, risk }),
-      reply_to: 'info@network26.com',
+      reply_to: 'hello@network26.com',
       headers: {
         'X-Demo-Type': 'spoof-education',
         'X-Demo-Domain': domain,
@@ -142,7 +142,7 @@ async function sendViaMailgun(env, { to, spoofFrom, displayName, domain, risk })
   form.append('to', to);
   form.append('subject', subject);
   form.append('html', buildDemoEmailHtml({ domain, spoofFrom, displayName, risk }));
-  form.append('h:Reply-To', 'info@network26.com');
+  form.append('h:Reply-To', 'hello@network26.com');
   form.append('o:tag', 'spoof-demo');
   form.append('h:X-Demo-Type', 'spoof-education');
 

@@ -119,7 +119,7 @@
       '\n          <a href="' + join(root, 'privacy.html') + '" class="hover:text-slate-700 transition-colors">Privacy</a>' +
       '\n          <a href="https://support.Network26.com" class="hover:text-slate-700 transition-colors">Support Portal</a>' +
       '\n          <a href="tel:4253689526" class="hover:text-slate-700 transition-colors">425-368-9526</a>' +
-      '\n          <a href="mailto:info@network26.com" class="hover:text-slate-700 transition-colors">info@network26.com</a>' +
+      '\n          <a href="mailto:hello@network26.com" class="hover:text-slate-700 transition-colors">hello@network26.com</a>' +
       '\n        </div>' +
       '\n        <div class="text-[10px]">Managed IT · Greater Puget Sound</div>' +
       '\n      </div>' +
