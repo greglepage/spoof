@@ -54,7 +54,7 @@
       '\n    <div class="max-w-7xl mx-auto px-6">' +
       '\n      <div class="flex items-center justify-between h-16">' +
       '\n        <a href="' + home + '" class="flex items-center gap-x-3 group">' +
-      '\n          <img src="' + logo + '" alt="Network26 logo icon" class="h-9 w-9 rounded-xl object-cover ring-1 ring-slate-200 group-hover:ring-teal-200 transition-all">' +
+      '\n          <img src="' + logo + '" alt="Network26 logo icon" class="h-9 w-9 rounded-xl object-cover">' +
       '\n          <div class="logo-font text-2xl"><span class="text-slate-900">Network</span><span class="text-teal-500 group-hover:text-teal-400 transition-colors">26</span></div>' +
       '\n        </a>' +
       '\n        <div class="hidden md:flex items-center gap-x-8 text-sm font-medium">' +
