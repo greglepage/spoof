@@ -50,7 +50,7 @@
     var contact = join(root, 'contact.html');
 
     return (
-      '\n  <nav class="bg-teal-50 border-b border-teal-100 sticky top-0 z-50">' +
+      '\n  <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">' +
       '\n    <div class="max-w-7xl mx-auto px-6">' +
       '\n      <div class="flex items-center justify-between gap-x-4 h-12">' +
       '\n        <a href="' + home + '" class="flex items-center gap-x-3 group shrink-0 relative z-10">' +
@@ -81,7 +81,7 @@
       '\n        </button>' +
       '\n      </div>' +
       '\n    </div>' +
-      '\n    <div id="mobile-menu" class="hidden lg:hidden border-t border-teal-100 bg-teal-50 px-6 py-5">' +
+      '\n    <div id="mobile-menu" class="hidden lg:hidden border-t bg-white px-6 py-5">' +
       '\n      <div class="flex flex-col gap-y-1 text-sm font-medium">' +
       '\n        <a href="' + home + '" data-nav-section="home" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Home</a>' +
       '\n        <a href="' + services + '" data-nav-section="services" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Services</a>' +
