@@ -594,7 +594,7 @@
 
   function renderWhyItFoolsSection() {
     return `
-      <section id="how-it-works" class="mb-8 sm:mb-12 scroll-mt-20">
+      <section id="how-it-works" class="scroll-mt-20">
         <div class="text-center mb-8 sm:mb-10">
           <div class="text-teal-600 text-xs tracking-[2px] font-semibold">WHY IT FOOLS PEOPLE</div>
         </div>
