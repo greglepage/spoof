@@ -1,5 +1,5 @@
 (function () {
-  const NAV_OFFSET = 80;
+  const NAV_OFFSET = 64;
 
   function getNavLinks() {
     return document.querySelectorAll('[data-nav-section]');

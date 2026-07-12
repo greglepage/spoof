@@ -62,6 +62,14 @@
       letter-spacing: -0.025em;
     }
 
+    /* Keep brand mark from colliding with nav/menu controls on tablets */
+    nav .logo-font {
+      white-space: nowrap;
+    }
+    nav a.group {
+      flex-shrink: 0;
+    }
+
     .nav-link {
       transition: color 0.1s ease;
     }
@@ -70,6 +78,7 @@
     }
     .nav-link.nav-link-active {
       color: #0d9488;
+      font-weight: 700;
     }
     .nav-link.nav-link-active:hover {
       color: #0d9488;
@@ -77,7 +86,7 @@
     .mobile-link.nav-link-active {
       color: #0d9488;
       background-color: #f0fdfa;
-      font-weight: 500;
+      font-weight: 700;
     }
 
     .hero-bg {

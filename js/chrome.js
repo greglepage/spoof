@@ -50,22 +50,22 @@
     var contact = join(root, 'contact.html');
 
     return (
-      '\n  <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">' +
+      '\n  <nav class="bg-teal-50 border-b border-teal-100 sticky top-0 z-50">' +
       '\n    <div class="max-w-7xl mx-auto px-6">' +
-      '\n      <div class="flex items-center justify-between h-16">' +
-      '\n        <a href="' + home + '" class="flex items-center gap-x-3 group">' +
-      '\n          <img src="' + logo + '" alt="Network26 logo icon" class="h-9 w-9 rounded-xl object-cover">' +
-      '\n          <div class="logo-font text-2xl"><span class="text-slate-900">Network</span><span class="text-teal-500 group-hover:text-teal-400 transition-colors">26</span></div>' +
+      '\n      <div class="flex items-center justify-between gap-x-4 h-12">' +
+      '\n        <a href="' + home + '" class="flex items-center gap-x-3 group shrink-0 relative z-10">' +
+      '\n          <img src="' + logo + '" alt="Network26 logo icon" class="h-9 w-9 rounded-xl object-cover shrink-0">' +
+      '\n          <div class="logo-font text-2xl whitespace-nowrap"><span class="text-slate-900">Network</span><span class="text-teal-500 group-hover:text-teal-400 transition-colors">26</span></div>' +
       '\n        </a>' +
-      '\n        <div class="hidden md:flex items-center gap-x-8 text-sm font-medium">' +
+      '\n        <div class="hidden lg:flex items-center gap-x-14 text-[15px] font-medium">' +
       '\n          <a href="' + home + '" data-nav-section="home" class="nav-link text-slate-600 hover:text-slate-900">Home</a>' +
       '\n          <a href="' + services + '" data-nav-section="services" class="nav-link text-slate-600 hover:text-slate-900">Services</a>' +
       '\n          <a href="' + locations + '" data-nav-section="locations" class="nav-link text-slate-600 hover:text-slate-900">Locations</a>' +
       '\n          <a href="' + about + '" data-nav-section="about" class="nav-link text-slate-600 hover:text-slate-900">About</a>' +
       '\n          <a href="' + contact + '" data-nav-section="contact" class="nav-link text-slate-600 hover:text-slate-900">Contact</a>' +
       '\n        </div>' +
-      '\n        <div class="hidden md:flex items-center gap-x-4">' +
-      '\n          <a href="tel:4253689526" class="inline-flex items-center gap-x-2 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 transition-colors">' +
+      '\n        <div class="hidden lg:flex items-center gap-x-4 shrink-0">' +
+      '\n          <a href="tel:4253689526" class="hidden xl:inline-flex items-center gap-x-2 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 transition-colors">' +
       '\n            ' + phoneIcon() +
       '\n            <span>425-368-9526</span>' +
       '\n          </a>' +
@@ -74,14 +74,14 @@
       '\n            <span>Get in Touch</span>' +
       '\n          </a>' +
       '\n        </div>' +
-      '\n        <button id="mobile-menu-btn" type="button" class="md:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors" aria-label="Toggle menu" aria-expanded="false">' +
+      '\n        <button id="mobile-menu-btn" type="button" class="lg:hidden shrink-0 relative z-10 p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors" aria-label="Toggle menu" aria-expanded="false">' +
       '\n          <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">' +
       '\n            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25" d="M4 6h16M4 12h16M4 18h16" />' +
       '\n          </svg>' +
       '\n        </button>' +
       '\n      </div>' +
       '\n    </div>' +
-      '\n    <div id="mobile-menu" class="hidden md:hidden border-t bg-white px-6 py-5">' +
+      '\n    <div id="mobile-menu" class="hidden lg:hidden border-t border-teal-100 bg-teal-50 px-6 py-5">' +
       '\n      <div class="flex flex-col gap-y-1 text-sm font-medium">' +
       '\n        <a href="' + home + '" data-nav-section="home" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Home</a>' +
       '\n        <a href="' + services + '" data-nav-section="services" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Services</a>' +
@@ -153,7 +153,17 @@
     });
   }
 
+  function ensureActiveNavStyles() {
+    if (document.getElementById('n26-nav-active-styles')) return;
+    var style = document.createElement('style');
+    style.id = 'n26-nav-active-styles';
+    style.textContent =
+      '.nav-link.nav-link-active,.mobile-link.nav-link-active{font-weight:700}';
+    document.head.appendChild(style);
+  }
+
   function boot() {
+    ensureActiveNavStyles();
     var root = siteRoot();
     var logo = logoSrc();
     var navEl = document.getElementById('site-nav');
