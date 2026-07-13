@@ -44,8 +44,14 @@ function jsonResponse(body, status, extraHeaders = {}) {
 function sanitizeDomain(input) {
   if (!input || typeof input !== 'string') return null;
   let d = input.trim().toLowerCase();
+  d = d.replace(/^mailto:/, '');
+  // Accept email addresses: use only the domain after @ (local part is discarded).
+  if (d.includes('@')) {
+    d = d.split('@').pop() || '';
+  }
   d = d.replace(/^https?:\/\//, '').replace(/^www\./, '');
-  d = d.split('/')[0].split('?')[0].replace(/@/g, '');
+  d = d.split('/')[0].split('?')[0].split('#')[0];
+  d = d.replace(/^<|>$/g, '').replace(/\.$/, '');
   if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(d)) return null;
   return d;
 }

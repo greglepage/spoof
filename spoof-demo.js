@@ -778,7 +778,7 @@
     hideError();
     const domain = EmailAuthChecker.sanitizeDomain(rawDomain);
     if (!domain) {
-      showError('Please enter a valid domain name (e.g. yourcompany.com).');
+      showError('Please enter a valid domain or email (e.g. yourcompany.com or you@yourcompany.com).');
       return;
     }
 
