@@ -62,8 +62,8 @@
       '\n          <a href="' + home + '" data-nav-section="home" class="nav-link text-slate-600 hover:text-slate-900">Home</a>' +
       '\n          <a href="' + services + '" data-nav-section="services" class="nav-link text-slate-600 hover:text-slate-900">Services</a>' +
       '\n          <a href="' + locations + '" data-nav-section="locations" class="nav-link text-slate-600 hover:text-slate-900">Locations</a>' +
-      '\n          <a href="' + about + '" data-nav-section="about" class="nav-link text-slate-600 hover:text-slate-900">About</a>' +
       '\n          <a href="' + tools + '" data-nav-section="tools" class="nav-link text-slate-600 hover:text-slate-900">Tools</a>' +
+      '\n          <a href="' + about + '" data-nav-section="about" class="nav-link text-slate-600 hover:text-slate-900">About</a>' +
       '\n          <a href="' + contact + '" data-nav-section="contact" class="nav-link text-slate-600 hover:text-slate-900">Contact</a>' +
       '\n        </div>' +
       '\n        <div class="hidden lg:flex items-center gap-x-4 shrink-0">' +
@@ -88,8 +88,8 @@
       '\n        <a href="' + home + '" data-nav-section="home" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Home</a>' +
       '\n        <a href="' + services + '" data-nav-section="services" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Services</a>' +
       '\n        <a href="' + locations + '" data-nav-section="locations" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Locations</a>' +
-      '\n        <a href="' + about + '" data-nav-section="about" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">About</a>' +
       '\n        <a href="' + tools + '" data-nav-section="tools" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Tools</a>' +
+      '\n        <a href="' + about + '" data-nav-section="about" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">About</a>' +
       '\n        <a href="' + contact + '" data-nav-section="contact" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Contact</a>' +
       '\n        <div class="pt-3 mt-2 border-t flex flex-col gap-y-3">' +
       '\n          <a href="tel:4253689526" class="flex items-center justify-center gap-x-2 text-base font-semibold py-3 rounded-2xl border border-slate-200 text-slate-700">' +
