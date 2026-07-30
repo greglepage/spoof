@@ -68,7 +68,7 @@
       '\n    <div class="max-w-7xl mx-auto px-6">' +
       '\n      <div class="flex items-center justify-between h-16 gap-x-4">' +
       '\n        <a href="' + home + '" class="flex items-center gap-x-3 group shrink-0 relative z-10">' +
-      '\n          <img src="' + logo + '" alt="Network26" class="h-9 w-9 rounded-xl object-cover shrink-0 ring-1 ring-slate-200/80">' +
+      '\n          <img src="' + logo + '" alt="Network26" class="h-8 w-8 sm:h-9 sm:w-9 rounded-xl object-cover shrink-0">' +
       '\n          <div class="logo-font text-2xl whitespace-nowrap leading-none"><span class="text-slate-900">Network</span><span class="text-teal-500 group-hover:text-teal-400 transition-colors">26</span></div>' +
       '\n        </a>' +
       '\n        <div class="hidden lg:flex items-center gap-x-8 text-[15px]">' +
@@ -125,7 +125,7 @@
       '\n      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-10 lg:gap-8">' +
       '\n        <div class="col-span-2 md:col-span-4 lg:col-span-4">' +
       '\n          <a href="' + join(root, '') + '" class="inline-flex items-center gap-x-3 group">' +
-      '\n            <img src="' + logo + '" alt="Network26" class="h-9 w-9 rounded-xl object-cover ring-1 ring-white/10">' +
+      '\n            <img src="' + logo + '" alt="Network26" class="h-8 w-8 sm:h-9 sm:w-9 rounded-xl object-cover shrink-0">' +
       '\n            <div class="logo-font text-xl leading-none"><span class="text-white">Network</span><span class="text-teal-400">26</span></div>' +
       '\n          </a>' +
       '\n          <p class="mt-4 text-sm leading-relaxed text-slate-400 max-w-sm">' +
