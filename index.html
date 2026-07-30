@@ -176,22 +176,25 @@
       box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.45);
     }
 
-    .hero-bg {
+    .hero-bg,
+    .texture-box {
+      position: relative;
+      overflow: hidden;
+      color: white;
       background-color: #0b1220;
       background-image:
         radial-gradient(ellipse 80% 60% at 18% 22%, rgba(20, 184, 166, 0.14) 0%, transparent 55%),
         radial-gradient(ellipse 70% 55% at 82% 78%, rgba(45, 212, 191, 0.08) 0%, transparent 50%),
-        radial-gradient(rgba(94, 234, 212, 0.11) 1px, transparent 1px);
-      background-size: auto, auto, 28px 28px;
-      color: white;
+        radial-gradient(ellipse 50% 40% at 55% 45%, rgba(56, 189, 248, 0.05) 0%, transparent 60%);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.5);
     }
 
     .network-pattern {
+      /* Soft glows only — no dotted grid (avoids double texture on CTAs) */
       background-image:
-        radial-gradient(ellipse 80% 60% at 18% 22%, rgba(20, 184, 166, 0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 70% 55% at 82% 78%, rgba(45, 212, 191, 0.08) 0%, transparent 50%),
-        radial-gradient(rgba(94, 234, 212, 0.11) 1px, transparent 1px);
-      background-size: auto, auto, 28px 28px;
+        radial-gradient(ellipse 80% 60% at 18% 22%, rgba(20, 184, 166, 0.1) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 55% at 82% 78%, rgba(45, 212, 191, 0.06) 0%, transparent 50%);
       pointer-events: none;
     }
 
@@ -424,8 +427,7 @@
 
   <!-- CTA -->
   <section id="help" class="max-w-5xl mx-auto page-x pt-10 sm:pt-14 pb-10 sm:pb-14">
-    <div class="rounded-3xl hero-bg text-white relative overflow-hidden shadow-sm">
-      <div class="network-pattern absolute inset-0"></div>
+    <div class="rounded-3xl texture-box text-white relative overflow-hidden">
       <div class="relative p-6 sm:p-8 md:p-12">
         <div class="grid md:grid-cols-5 gap-x-12 gap-y-6 sm:gap-y-8 items-center">
           <div class="md:col-span-3">
