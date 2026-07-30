@@ -1,7 +1,6 @@
 /**
  * Network26 shared header + footer for satellite tool / side-project sites.
- * Menu matches main site: Home · Services · Case Studies · Locations · About · Tools
- * + Free Assessment CTA.
+ * Nav + footer match the main network26.com chrome (multi-column dark footer).
  *
  * Usage:
  *   <body data-site-root="https://network26.com/" data-logo="logo-icon.jpg" data-active="tools">
@@ -35,6 +34,24 @@
 
   function phoneIcon() {
     return '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>';
+  }
+
+  function ensureChromeStyles() {
+    if (document.getElementById('n26-chrome-styles')) return;
+    var style = document.createElement('style');
+    style.id = 'n26-chrome-styles';
+    style.textContent = [
+      '.nav-link.nav-link-active{color:#0d9488;font-weight:700}',
+      '.mobile-link.nav-link-active{color:#0d9488;background-color:#f0fdfa;font-weight:700}',
+      '.site-footer{background:#0b1220;color:#94a3b8;border-top:1px solid rgba(148,163,184,0.1)}',
+      '.site-footer a{color:#cbd5e1;transition:color .12s ease}',
+      '.site-footer a:hover{color:#5eead4}',
+      '.site-footer .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border-radius:.875rem;font-weight:600;font-size:.875rem;line-height:1;padding:.75rem 1.15rem;transition:transform .15s ease,background .15s ease;text-decoration:none;border:1px solid transparent;white-space:nowrap}',
+      '.site-footer .btn-primary{background:#14b8a6;color:#fff;box-shadow:0 10px 20px -12px rgba(20,184,166,.8)}',
+      '.site-footer .btn-primary:hover{background:#0f766e;transform:translateY(-1px);color:#fff}',
+      '.logo-font{font-family:Orbitron,\'Space Grotesk\',Inter,system-ui,sans-serif;font-weight:700;letter-spacing:-0.025em}'
+    ].join('');
+    document.head.appendChild(style);
   }
 
   function renderNav(root, logo) {
@@ -103,25 +120,67 @@
 
   function renderFooter(root, logo) {
     return (
-      '\n  <footer class="border-t bg-white">' +
-      '\n    <div class="max-w-7xl mx-auto px-6 py-9 text-xs">' +
-      '\n      <div class="flex flex-col md:flex-row justify-between gap-y-6 items-center text-slate-500">' +
-      '\n        <div class="flex items-center gap-x-3">' +
-      '\n          <img src="' + logo + '" alt="Network26" class="h-6 w-6 rounded-lg object-cover opacity-80">' +
-      '\n          <div>&copy; 2026 <span class="logo-font"><span class="text-slate-900">Network</span><span class="text-teal-500">26</span></span>. All rights reserved.</div>' +
+      '\n  <footer class="site-footer">' +
+      '\n    <div class="max-w-7xl mx-auto px-6 pt-14 pb-10">' +
+      '\n      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-10 lg:gap-8">' +
+      '\n        <div class="col-span-2 md:col-span-4 lg:col-span-4">' +
+      '\n          <a href="' + join(root, '') + '" class="inline-flex items-center gap-x-3 group">' +
+      '\n            <img src="' + logo + '" alt="Network26" class="h-9 w-9 rounded-xl object-cover ring-1 ring-white/10">' +
+      '\n            <div class="logo-font text-xl leading-none"><span class="text-white">Network</span><span class="text-teal-400">26</span></div>' +
+      '\n          </a>' +
+      '\n          <p class="mt-4 text-sm leading-relaxed text-slate-400 max-w-sm">' +
+      '\n            Managed IT, cybersecurity, and help desk for small to medium-sized businesses across the Greater Puget Sound. Proactive support without the enterprise runaround.' +
+      '\n          </p>' +
+      '\n          <div class="mt-5 flex flex-col gap-2 text-sm">' +
+      '\n            <a href="tel:4253689526" class="font-semibold text-white hover:text-teal-300">425-368-9526</a>' +
+      '\n            <a href="mailto:hello@network26.com" class="hover:text-teal-300">hello@network26.com</a>' +
+      '\n          </div>' +
       '\n        </div>' +
+      '\n        <div class="lg:col-span-2">' +
+      '\n          <div class="text-xs font-semibold tracking-[0.14em] uppercase text-slate-500 mb-4">Services</div>' +
+      '\n          <ul class="space-y-2.5 text-sm">' +
+      '\n            <li><a href="' + join(root, 'services/managed-it/') + '">Managed IT</a></li>' +
+      '\n            <li><a href="' + join(root, 'services/help-desk/') + '">Help Desk</a></li>' +
+      '\n            <li><a href="' + join(root, 'services/cybersecurity/') + '">Cybersecurity</a></li>' +
+      '\n            <li><a href="' + join(root, 'services/microsoft-365/') + '">Microsoft 365</a></li>' +
+      '\n            <li><a href="' + join(root, 'services/') + '">All services</a></li>' +
+      '\n          </ul>' +
+      '\n        </div>' +
+      '\n        <div class="lg:col-span-2">' +
+      '\n          <div class="text-xs font-semibold tracking-[0.14em] uppercase text-slate-500 mb-4">Company</div>' +
+      '\n          <ul class="space-y-2.5 text-sm">' +
+      '\n            <li><a href="' + join(root, 'about.html') + '">About</a></li>' +
+      '\n            <li><a href="' + join(root, 'case-studies/') + '">Case Studies</a></li>' +
+      '\n            <li><a href="' + join(root, 'locations/') + '">Locations</a></li>' +
+      '\n            <li><a href="' + join(root, 'tools/') + '">Free Tools</a></li>' +
+      '\n            <li><a href="' + join(root, 'contact.html') + '">Contact</a></li>' +
+      '\n          </ul>' +
+      '\n        </div>' +
+      '\n        <div class="lg:col-span-2">' +
+      '\n          <div class="text-xs font-semibold tracking-[0.14em] uppercase text-slate-500 mb-4">Locations</div>' +
+      '\n          <ul class="space-y-2.5 text-sm">' +
+      '\n            <li><a href="' + join(root, 'locations/seattle/') + '">Seattle</a></li>' +
+      '\n            <li><a href="' + join(root, 'locations/tacoma/') + '">Tacoma</a></li>' +
+      '\n            <li><a href="' + join(root, 'locations/olympia/') + '">Olympia</a></li>' +
+      '\n            <li><a href="' + join(root, 'locations/puyallup/') + '">Puyallup</a></li>' +
+      '\n          </ul>' +
+      '\n        </div>' +
+      '\n        <div class="col-span-2 md:col-span-4 lg:col-span-2">' +
+      '\n          <div class="text-xs font-semibold tracking-[0.14em] uppercase text-slate-500 mb-4">Get started</div>' +
+      '\n          <p class="text-sm text-slate-400 mb-4">Free IT assessment. Clear pricing. No pressure.</p>' +
+      '\n          <a href="' + join(root, 'contact.html') + '" class="btn btn-primary !text-sm w-full sm:w-auto">Request Assessment</a>' +
+      '\n          <div class="mt-4">' +
+      '\n            <a href="https://support.Network26.com" class="text-sm text-slate-400 hover:text-teal-300">Support Portal →</a>' +
+      '\n          </div>' +
+      '\n        </div>' +
+      '\n      </div>' +
+      '\n      <div class="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">' +
+      '\n        <div>&copy; 2026 <span class="logo-font"><span class="text-slate-300">Network</span><span class="text-teal-500">26</span></span>. All rights reserved.</div>' +
       '\n        <div class="flex flex-wrap justify-center gap-x-5 gap-y-2">' +
-      '\n          <a href="' + join(root, 'services/') + '" class="hover:text-slate-700 transition-colors">Services</a>' +
-      '\n          <a href="' + join(root, 'case-studies/') + '" class="hover:text-slate-700 transition-colors">Case Studies</a>' +
-      '\n          <a href="' + join(root, 'locations/') + '" class="hover:text-slate-700 transition-colors">Locations</a>' +
-      '\n          <a href="' + join(root, 'tools/') + '" class="hover:text-slate-700 transition-colors">Free Tools</a>' +
-      '\n          <a href="' + join(root, 'about.html') + '" class="hover:text-slate-700 transition-colors">About</a>' +
-      '\n          <a href="' + join(root, 'privacy.html') + '" class="hover:text-slate-700 transition-colors">Privacy</a>' +
-      '\n          <a href="https://support.Network26.com" class="hover:text-slate-700 transition-colors">Support Portal</a>' +
-      '\n          <a href="tel:4253689526" class="hover:text-slate-700 transition-colors">425-368-9526</a>' +
-      '\n          <a href="mailto:hello@network26.com" class="hover:text-slate-700 transition-colors">hello@network26.com</a>' +
+      '\n          <a href="' + join(root, 'privacy.html') + '" class="text-slate-400 hover:text-teal-300">Privacy</a>' +
+      '\n          <a href="' + join(root, 'contact.html') + '" class="text-slate-400 hover:text-teal-300">Contact</a>' +
+      '\n          <span class="text-slate-600">Managed IT · Greater Puget Sound</span>' +
       '\n        </div>' +
-      '\n        <div class="text-[10px]">Managed IT · Greater Puget Sound</div>' +
       '\n      </div>' +
       '\n    </div>' +
       '\n  </footer>'
@@ -153,18 +212,8 @@
     });
   }
 
-  function ensureActiveNavStyles() {
-    if (document.getElementById('n26-nav-active-styles')) return;
-    var style = document.createElement('style');
-    style.id = 'n26-nav-active-styles';
-    style.textContent =
-      '.nav-link.nav-link-active{color:#0d9488;font-weight:700}' +
-      '.mobile-link.nav-link-active{color:#0d9488;background-color:#f0fdfa;font-weight:700}';
-    document.head.appendChild(style);
-  }
-
   function boot() {
-    ensureActiveNavStyles();
+    ensureChromeStyles();
     var root = siteRoot();
     var logo = logoSrc();
     var navEl = document.getElementById('site-nav');
