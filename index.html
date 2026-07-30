@@ -37,7 +37,7 @@
 
   <style>
     :root {
-      --navy: #0f172a;
+      --navy: #0b1220;
       --teal: #14b8a6;
     }
 
@@ -88,16 +88,111 @@
       background-color: #f0fdfa;
       font-weight: 700;
     }
+    .display {
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(10px);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #99f6e4;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .badge-dot {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 999px;
+      background: #2dd4bf;
+      box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.25);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+
+    .hero-photo {
+      position: relative;
+      overflow: hidden;
+      color: white;
+      min-height: clamp(22rem, 50vh, 32rem);
+      display: flex;
+      align-items: center;
+      background-color: #070b14;
+    }
+
+    .hero-photo-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 35%;
+      transform: scale(1.04);
+      filter: saturate(1.05) contrast(1.04);
+    }
+
+    .hero-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(105deg, rgba(7, 11, 20, 0.92) 0%, rgba(7, 11, 20, 0.78) 40%, rgba(7, 11, 20, 0.45) 70%, rgba(7, 11, 20, 0.55) 100%),
+        linear-gradient(to top, rgba(7, 11, 20, 0.55) 0%, transparent 42%),
+        radial-gradient(ellipse 70% 60% at 15% 20%, rgba(20, 184, 166, 0.14) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .hero-photo-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+
+    .hero-photo-content .display {
+      text-shadow: 0 2px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    .hero-proof-tile {
+      position: relative;
+      border-radius: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(2, 6, 23, 0.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.45);
+    }
 
     .hero-bg {
-      background: linear-gradient(135deg, #0f172a 0%, #1e2937 100%);
+      background-color: #0b1220;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 18% 22%, rgba(20, 184, 166, 0.14) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 55% at 82% 78%, rgba(45, 212, 191, 0.08) 0%, transparent 50%),
+        radial-gradient(rgba(94, 234, 212, 0.11) 1px, transparent 1px);
+      background-size: auto, auto, 28px 28px;
+      color: white;
     }
 
     .network-pattern {
       background-image:
-        radial-gradient(circle at 25% 30%, rgba(20, 184, 166, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 75% 70%, rgba(14, 165, 233, 0.06) 0%, transparent 60%);
-      background-size: 120px 120px;
+        radial-gradient(ellipse 80% 60% at 18% 22%, rgba(20, 184, 166, 0.14) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 55% at 82% 78%, rgba(45, 212, 191, 0.08) 0%, transparent 50%),
+        radial-gradient(rgba(94, 234, 212, 0.11) 1px, transparent 1px);
+      background-size: auto, auto, 28px 28px;
+      pointer-events: none;
     }
 
     .service-card {
@@ -204,51 +299,61 @@
   <div id="site-nav"></div>
 
   <!-- HERO -->
-  <header class="hero-bg text-white py-8 md:py-10 relative overflow-hidden">
-    <div class="network-pattern absolute inset-0"></div>
-
-    <div class="max-w-4xl mx-auto page-x relative">
-      <div class="max-w-3xl mx-auto text-center">
-        <div class="inline-flex items-center bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl px-5 py-1.5 mb-6">
-          <span class="text-[15px] font-medium tracking-wide text-teal-300">Free preview &bull; No signup required</span>
-        </div>
-
-        <h1 class="section-title text-white font-semibold tracking-tighter leading-none mb-5">
-          What would a spoofed email<br><span class="text-teal-400">from your domain look like?</span>
-        </h1>
-
-        <p class="max-w-lg mx-auto text-lg md:text-xl text-slate-300 mb-6">
-          Enter a domain or email to see a realistic preview — the message sitting in employee or client inboxes if email authentication isn't in place.
-        </p>
-
-        <form id="checker-form" class="max-w-xl mx-auto">
-          <div class="flex flex-col sm:flex-row gap-3">
-            <input
-              type="text"
-              id="domain-input"
-              name="domain"
-              autocomplete="off"
-              autocapitalize="off"
-              spellcheck="false"
-              inputmode="text"
-              placeholder="yourcompany.com"
-              class="checker-input touch-target flex-1 rounded-2xl px-4 sm:px-5 py-3.5 text-slate-900 outline-none border-2 border-transparent bg-white min-w-0"
-              aria-label="Domain or email"
-            >
-            <button type="submit" id="check-btn" class="touch-target inline-flex items-center justify-center gap-x-2 w-full sm:w-auto px-7 py-3.5 text-base font-semibold rounded-2xl teal-btn shadow-lg shadow-teal-950/30 shrink-0">
-              <svg id="check-spinner" class="hidden spinner w-5 h-5" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-              </svg>
-              <span id="check-btn-text">Show Spoof Preview</span>
-            </button>
+  <header class="hero-photo">
+    <img src="hero.jpg" alt="" class="hero-photo-img" width="1920" height="1080" fetchpriority="high">
+    <div class="hero-photo-overlay" aria-hidden="true"></div>
+    <div class="hero-photo-content max-w-7xl mx-auto page-x pt-14 pb-14 md:pt-16 md:pb-20">
+      <div class="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        <div class="lg:col-span-6">
+          <div class="badge-pill mb-6">
+            <span class="badge-dot" aria-hidden="true"></span>
+            Free preview
+            <span class="badge-dot" aria-hidden="true"></span>
+            No signup
+            <span class="badge-dot" aria-hidden="true"></span>
+            Outlook-style
           </div>
-          <p id="checker-error" class="hidden mt-3 text-sm text-red-300 bg-red-950/30 border border-red-400/30 rounded-xl px-4 py-2"></p>
-        </form>
-
-        <p class="mt-5 text-xs sm:text-sm text-slate-400">
-          We only look up public DNS records — nothing is sent to your inbox.
-        </p>
+          <h1 class="display text-[2.15rem] sm:text-4xl md:text-[2.75rem] text-white leading-[1.08]">
+            What would a spoofed email<br><span class="text-teal-400">from your domain look like?</span>
+          </h1>
+          <p class="mt-5 text-lg md:text-xl text-slate-200 max-w-xl leading-relaxed">
+            Enter a domain or email to see a realistic preview — the message sitting in employee or client inboxes if email authentication isn&rsquo;t in place.
+          </p>
+          <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-300">
+            <div class="inline-flex items-center gap-2"><svg class="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Microsoft Outlook preview</div>
+            <div class="inline-flex items-center gap-2"><svg class="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Public DNS only</div>
+          </div>
+        </div>
+        <div class="lg:col-span-6">
+          <div class="hero-proof-tile">
+            <div class="text-xs font-semibold tracking-[0.16em] uppercase text-teal-300/90 mb-4">Show spoof preview</div>
+            <form id="checker-form">
+              <div class="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="text"
+                  id="domain-input"
+                  name="domain"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  inputmode="text"
+                  placeholder="yourcompany.com"
+                  class="checker-input touch-target flex-1 rounded-2xl px-4 sm:px-5 py-3.5 text-slate-900 outline-none border-2 border-transparent bg-white min-w-0"
+                  aria-label="Domain or email"
+                >
+                <button type="submit" id="check-btn" class="touch-target inline-flex items-center justify-center gap-x-2 w-full sm:w-auto px-7 py-3.5 text-base font-semibold rounded-2xl teal-btn shadow-lg shadow-teal-950/30 shrink-0">
+                  <svg id="check-spinner" class="hidden spinner w-5 h-5" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                  </svg>
+                  <span id="check-btn-text">Show Spoof Preview</span>
+                </button>
+              </div>
+              <p id="checker-error" class="hidden mt-3 text-sm text-red-300 bg-red-950/30 border border-red-400/30 rounded-xl px-4 py-2"></p>
+            </form>
+            <p class="mt-4 text-xs text-slate-400">We only look up public DNS records — nothing is sent to your inbox.</p>
+          </div>
+        </div>
       </div>
     </div>
   </header>
