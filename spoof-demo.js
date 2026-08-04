@@ -824,6 +824,13 @@
     if (prefill) {
       input.value = prefill;
       handleCheck(prefill);
+    } else {
+      // Ready to type immediately (HTML autofocus + JS for reliability after chrome inject)
+      try {
+        input.focus({ preventScroll: true });
+      } catch (_) {
+        input.focus();
+      }
     }
 
   }

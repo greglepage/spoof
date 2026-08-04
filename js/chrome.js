@@ -178,6 +178,7 @@
       '\n        <div>&copy; 2026 <span class="logo-font"><span class="text-slate-300">Network</span><span class="text-teal-500">26</span></span>. All rights reserved.</div>' +
       '\n        <div class="flex flex-wrap justify-center gap-x-5 gap-y-2">' +
       '\n          <a href="' + join(root, 'privacy.html') + '" class="text-slate-400 hover:text-teal-300">Privacy</a>' +
+      '\n          <a href="' + join(root, 'terms.html') + '" class="text-slate-400 hover:text-teal-300">Terms</a>' +
       '\n          <a href="' + join(root, 'contact.html') + '" class="text-slate-400 hover:text-teal-300">Contact</a>' +
       '\n          <span class="text-slate-600">Managed IT · Greater Puget Sound</span>' +
       '\n        </div>' +
