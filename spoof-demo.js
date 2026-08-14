@@ -588,6 +588,10 @@
             View full DMARC report for ${escapeHtml(domain)}
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
           </a>
+          <p class="text-sm text-slate-600 leading-relaxed m-0 mt-3">
+            Want it handled?
+            <a href="https://network26.com/services/dmarc-setup/?domain=${encodeURIComponent(domain)}&amp;utm_campaign=spoof-preview" class="font-semibold text-teal-700 hover:text-teal-800 underline underline-offset-2">Request the $350 setup</a>.
+          </p>
         </div>
       </div>`;
   }
@@ -695,8 +699,12 @@
   function updateBottomCta(domain) {
     const ctaDomain = document.getElementById('cta-domain');
     const ctaNote = document.getElementById('cta-domain-note');
+    const ctaBtn = document.getElementById('cta-contact-btn');
     if (ctaDomain) ctaDomain.textContent = domain;
     if (ctaNote) ctaNote.classList.remove('hidden');
+    if (ctaBtn && domain) {
+      ctaBtn.href = `https://network26.com/services/dmarc-setup/?domain=${encodeURIComponent(domain)}&utm_campaign=spoof-preview`;
+    }
   }
 
   function refreshPreview(data, scenarioKey) {
