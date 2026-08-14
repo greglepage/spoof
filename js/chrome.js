@@ -57,7 +57,7 @@
   function renderNav(root, logo) {
     var home = join(root, '');
     var services = join(root, 'services/');
-    var caseStudies = join(root, 'case-studies/');
+    var industries = join(root, 'industries/');
     var locations = join(root, 'locations/');
     var about = join(root, 'about.html');
     var tools = join(root, 'tools/');
@@ -74,10 +74,11 @@
       '\n        <div class="hidden lg:flex items-center gap-x-8 text-[15px]">' +
       '\n          <a href="' + home + '" data-nav-section="home" class="nav-link text-slate-600 hover:text-slate-900">Home</a>' +
       '\n          <a href="' + services + '" data-nav-section="services" class="nav-link text-slate-600 hover:text-slate-900">Services</a>' +
-      '\n          <a href="' + caseStudies + '" data-nav-section="case-studies" class="nav-link text-slate-600 hover:text-slate-900">Case Studies</a>' +
+      '\n          <a href="' + industries + '" data-nav-section="industries" class="nav-link text-slate-600 hover:text-slate-900">Industries</a>' +
       '\n          <a href="' + locations + '" data-nav-section="locations" class="nav-link text-slate-600 hover:text-slate-900">Locations</a>' +
       '\n          <a href="' + about + '" data-nav-section="about" class="nav-link text-slate-600 hover:text-slate-900">About</a>' +
       '\n          <a href="' + tools + '" data-nav-section="tools" class="nav-link text-slate-600 hover:text-slate-900">Tools</a>' +
+      '\n          <a href="' + contact + '" data-nav-section="contact" class="nav-link text-slate-600 hover:text-slate-900">Contact</a>' +
       '\n        </div>' +
       '\n        <div class="hidden lg:flex items-center gap-x-3 shrink-0">' +
       '\n          <a href="tel:4253689526" class="hidden xl:inline-flex items-center gap-x-2 py-2 px-2 text-sm font-semibold text-slate-700 hover:text-teal-600 transition-colors">' +
@@ -99,7 +100,7 @@
       '\n      <div class="flex flex-col gap-y-1 text-sm font-medium">' +
       '\n        <a href="' + home + '" data-nav-section="home" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Home</a>' +
       '\n        <a href="' + services + '" data-nav-section="services" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Services</a>' +
-      '\n        <a href="' + caseStudies + '" data-nav-section="case-studies" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Case Studies</a>' +
+      '\n        <a href="' + industries + '" data-nav-section="industries" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Industries</a>' +
       '\n        <a href="' + locations + '" data-nav-section="locations" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Locations</a>' +
       '\n        <a href="' + about + '" data-nav-section="about" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">About</a>' +
       '\n        <a href="' + tools + '" data-nav-section="tools" class="mobile-link px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900">Tools</a>' +
@@ -150,7 +151,7 @@
       '\n          <div class="text-xs font-semibold tracking-[0.14em] uppercase text-slate-500 mb-4">Company</div>' +
       '\n          <ul class="space-y-2.5 text-sm">' +
       '\n            <li><a href="' + join(root, 'about.html') + '">About</a></li>' +
-      '\n            <li><a href="' + join(root, 'case-studies/') + '">Case Studies</a></li>' +
+      '\n            <li><a href="' + join(root, 'industries/') + '">Industries</a></li>' +
       '\n            <li><a href="' + join(root, 'locations/') + '">Locations</a></li>' +
       '\n            <li><a href="' + join(root, 'tools/') + '">Free Tools</a></li>' +
       '\n            <li><a href="' + join(root, 'contact.html') + '">Contact</a></li>' +

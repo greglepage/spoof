@@ -590,7 +590,7 @@
           </a>
           <p class="text-sm text-slate-600 leading-relaxed m-0 mt-3">
             Want it handled?
-            <a href="https://network26.com/services/dmarc-setup/?domain=${encodeURIComponent(domain)}&amp;utm_campaign=spoof-preview" class="font-semibold text-teal-700 hover:text-teal-800 underline underline-offset-2">Request the $350 setup</a>.
+            <a href="https://network26.com/services/dmarc-setup/?domain=${encodeURIComponent(domain)}&amp;utm_campaign=spoof-preview" class="font-semibold text-teal-700 hover:text-teal-800 underline underline-offset-2">Have us set this up</a>.
           </p>
         </div>
       </div>`;
